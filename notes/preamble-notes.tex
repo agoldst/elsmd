@@ -1,0 +1,28 @@
+\usepackage{pgfpages}
+\setbeameroption{show notes}
+\setbeamertemplate{note page}[plain]
+
+\usefonttheme{professionalfonts}
+\setmainfont{Garamond Premier Pro}
+
+% stick slide number on each note: notice division by two!
+
+\usepackage{calc}
+\newcounter{curslide}
+\addtobeamertemplate{note page}{%
+    \setcounter{curslide}{\thepage / 2}%
+    SLIDE \thecurslide \par}{}
+
+% force notes on each slide
+% http://tex.stackexchange.com/questions/11708/run-macro-on-each-frame-in-beamer
+
+
+\makeatletter
+\def\beamer@framenotesbegin{% at beginning of slide
+  \gdef\beamer@noteitems{}%
+  \gdef\beamer@notes{{}}% used to be totally empty.
+}
+\makeatother
+
+\input{../macros.tex}
+
