@@ -1,2 +1,3 @@
 *.tex
 !preamble-slides.tex
+!classnotes.pdf
