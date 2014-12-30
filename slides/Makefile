@@ -31,8 +31,10 @@ $(slides_key): %.key: %.pdf
 	    -e 'save document 1 in "$(abspath ./$(basename $@))"' \
 	    -e 'end tell'
 
-all: $(slides_pdf) $(slides_key)
+all: $(slides_pdf)
+
+all_key: $(slides_key)
 
 .DEFAULT_GOAL := all
 
-.PHONY: all 
+.PHONY: all all_key
