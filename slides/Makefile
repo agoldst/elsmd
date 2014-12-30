@@ -35,6 +35,19 @@ all: $(slides_pdf)
 
 all_key: $(slides_key)
 
+# clean up everything except pdfs and keynote files 
+clean:
+	latexmk -c
+	rm -rf *.nav *.snm
+	rm -rf $(slides_tex)
+
+# clean up everything including pdfs and keynote files 
+reallyclean:
+	latexmk -C
+	rm -rf $(slides_tex)
+	rm -rf *.nav *.snm
+	rm -rf $(slides_key)
+
 .DEFAULT_GOAL := all
 
-.PHONY: all all_key
+.PHONY: all all_key clean reallyclean
