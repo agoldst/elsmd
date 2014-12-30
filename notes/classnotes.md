@@ -69,5 +69,11 @@ Grid demo LL
 \end{textblock}
 
 \begin{textblock}{4}(7,5)
-Grid demo LR
+\only<2>{Grid demo LR}
 \end{textblock}
+
+\note{<2>}{
+
+To get overlay effects with materials placed using \texttt{textpos}, you have to specify the overlay within the \texttt{textblock} environment.
+
+}
