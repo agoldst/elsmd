@@ -25,10 +25,15 @@ make -C notes classnotes.pdf
 
 [notes/classnotes.pdf](notes/classnotes.pdf) is the result on my system.
 
-I like to print these 4-up in landscape. That last step is automatable, but I haven't gotten around to that yet (hurrah, new project).
+I like to print these 4-up in landscape. To generate this format:
 
+```Make
+make -C notes classnotes-4up.pdf
+```
 
-To make all PDFs and Keynote files at once, use `make` from the toplevel directory. (One feels even more of a command-line master when one uses `$(MAKE)` in a Makefile).
+To make all slide and note PDFs at once, use `make` all by itself from the top-level directory. (One feels even more of a command-line master when one uses `$(MAKE)` in a Makefile).
+
+(To get all the keynote files, try `make all_key`, but no promises: my little AppleScript for running PDF To Keynote may not work quite right in that case.)
 
 I discuss how the bits and pieces work together, and the rationale for doing this, in a blog post: ["Easy Lecture Slides Made Difficult with Pandoc and Beamer."](http://andrewgoldstone.com/blog/2014/12/24/slides/)
 
