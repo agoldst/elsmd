@@ -1,39 +1,167 @@
 # Markdown to lecture slides
 
-(with some beamer bells and whistles, by a Keynote refugee)
+...using pandoc, with some Beamer bells and whistles, by a Keynote refugee.
 
-Create notes in the `notes/` directory, on the model of [classnotes.md](notes/classnotes.md). Then generate a PDF of slides with
+This setup is designed for two kinds of talking:
 
-```Make
-make -C slides classnotes.pdf
+1. *Lecturing from notes*. You speak impromptu from slides, with perhaps some extra notes in your hands, keyed to the slides.
+
+2. *Lecturing from a script*. You write out a talk and read it, stepping through slides as you go.
+
+In either case you may wish to distribute a *handout* with your slides to your listeners.
+
+For lectures from notes, create markdown files in the `notes` directory, on the model of [notes/notes-sample.md](notes/notes-sample.md). Using `make` then generates the following PDF files:
+
+1. [slides/*.pdf](slides/notes-sample.pdf): slides.
+1. [lectures/*.pdf](lectures/notes-sample.pdf): slides and notes interleaved, two slides and two note-pages to a sheet, for the lecturer.
+1. [handouts/*.pdf](handouts/notes-sample.pdf): sheets with two slides on the left and blank space on the right for audience notes.
+
+For lectures from scripts, create markdown files in the `scripts` directory, on the model of [scripts/script-sample.md](scripts/script-sample.md). Using `make` then generates [slides/*.pdf](slides/script-sample.pdf) and [handouts/*.pdf](handouts/script-sample.pdf) exactly as with the notes, but [lectures/*.pdf](lectures/script-sample.pdf) consists of a talk script to read rather than the notes pages.
+
+I used to use Keynote as a presentation viewer (first converting PDFs using [PDF to Keynote](http://www.cs.hmc.edu/~oneill/freesoftware/pdftokeynote.html)). I don't like the presentation mode in the most recent Keynote, and I have switched to using [Présentation](http://iihm.imag.fr/blanch/software/osx-presentation/), a free program with an excellent presentation mode for PDFs, controllable from the keyboard.
+
+# Installation
+
+You could simply clone or download this repository for each family of talks (e.g. a course of lectures). If you'd rather not proliferate copies of everything here, then you can instead 
+
+1. Place [overlay_filter](overlay_filter) in your `PATH`.
+2. Place [scuro_slides.latex](scuro_slides.latex) and [scuro_talk.latex](scuro_talk.latex) where pandoc looks for templates (by default, `$HOME/.pandoc/templates`).
+3. Copy over the [Makefile](Makefile) and create a folder `notes` or `scripts` or both to put your markdown in.
+
+## System requirements
+
+- pandoc
+- xelatex
+- make
+- python
+- latexmk
+- pdfjam (for speaker notes)
+
+latexmk and pdfjam are included in TeXLive. 
+
+The pdfjam program is used to create 4-up speaker notes (two slides and two pages of notes on each page). One can't use the `pgfpages` program for this because beamer's `\note` is not compatible with `pgfpages` layouts under xelatex. `pgfpages` *is* used to create the handouts (with two slides on the left and blank space on the right, for audiences), since handouts hide `\notes` anyway.
+
+latexmk is used to control xelatex and biber. This has the advantage of automating the multiple passes needed for using biblatex citations. It has the disadvantage of creating many auxiliary files. The Make rules here wipe out all the auxiliary files once the PDF has been created. This is a tradeoff, since it means that latexmk can never skip any passes after an initial run). It will take several seconds to generate even a small slideshow. Modern computing!
+
+# More detail on the source markdown
+
+The PDFs are generated from two custom [pandoc templates](http://pandoc.org/README.html#templates), which are included here. [scuro_slides.latex](scuro_slides.latex) is the template for slides, notes, and handouts. [scuro_talk.latex](scuro_talk.latex) is the template for a lecture script. Both are based on pandoc's default Beamer template. My templates allow a few extra YAML metadata variables to be set in the source markdown:
+
+## Typeface
+
+Set the typeface for the slides:
+
+```yaml
+sansfont: Gill Sans
 ```
 
-[slides/classnotes.pdf](slides/classnotes.pdf) is the result on my system.
-(Of course you can also `cd slides; make classnotes.pdf`, but I feel more like a command-line master if I use `make -C` from the top-level directory.)
+Keynote gave me a taste for Gill Sans. If you don't have or like Gill, [Fira Sans](https://www.mozilla.org/en-US/styleguide/products/firefox-os/typeface/) is free and worth considering. The beamer default is not nice.
 
-If you have Keynote and want to use it as a presentation PDF viewer, install [PDF to Keynote](http://www.cs.hmc.edu/~oneill/freesoftware/pdftokeynote.html) and then do
+## Lecture-script typeface
 
-```Make
-make -C slides classnotes.key
+```yaml
+mainfont: Minion Pro
 ```
 
-To generate notes (note pages interleaved with slide pages):
+The `mainfont` is only used for lecture scripts. The default is TeX's, that is, Computer Modern (which is a bit spindly for a script you have to read from while talking and gesticulating). A document font size of 12pt is set in the Makefile.
 
-```Make
-make -C notes classnotes.pdf
+## Bibliography
+
+For generating citations, I use `biblatex-chicago`. Set this up with
+
+```yaml
+biblatex: true
+biblatex-chicago: true
+biblatexoptions: [notes, noibid]
+bibliography: ../sources.bib
 ```
 
-[notes/classnotes.pdf](notes/classnotes.pdf) is the result on my system.
+You can then cite using either pandoc-style `[@citekey]` or LaTeX `\cite{citekey}`. (pandoc-citeproc is not adequate to citation in the humanities.)
 
-I like to print these 4-up in landscape. To generate this format:
+## Lecturing from notes: adding notes
 
-```Make
-make -C notes classnotes-4up.pdf
+To add notes, use beamer's `\note` command (inside `\note{...}`, use LaTeX, not markdown).
+
+
+Handouts and speaker notes both use the Beamer class option `handout`, which collapses incremental slides into one to save paper and (possibly) confusion.
+
+## Lecturing from a script: demarcating slides
+
+pandoc's slide generation is not really designed with lecturing from a script in mind. But a quirk of pandoc allows us to set this up fairly easily. Write paragraphs of markdown for the lecture script as normal. To specify a slide, begin with either a horizontal rule (three or more hyphens) or a *second-level* header. They end *either* with the start of another slide *or* with a *first-level* header. Examples:
+
+An untitled slide:
+
+```markdown
+-----
+
+- The cognitive style
+- of PandocPoint
+
+# 
+
+Script text.
 ```
 
-To make all slide and note PDFs at once, use `make` all by itself from the top-level directory. (One feels even more of a command-line master when one uses `$(MAKE)` in a Makefile).
+A titled slide:
 
-(To get all the keynote files, try `make all_key`, but no promises: my little AppleScript for running PDF To Keynote may not work quite right in that case.)
+```markdown
+## Bite-size pieces
 
-I discuss how the bits and pieces work together, and the rationale for doing this, in a blog post: ["Easy Lecture Slides Made Difficult with Pandoc and Beamer."](http://andrewgoldstone.com/blog/2014/12/24/slides/)
+- The cognitive style
+- of PandocPoint
+
+# bold note to self in script
+
+Script text.
+```
+
+The first-level headers can be empty, as in the first example, or contain text, as in the second example. Since this text will only appear in the script, not on the slides, it is useful for "stage directions."
+
+## Using beamer overlays and modes
+
+Beamer's "overlay specifications" allow you to create a series of slides that incrementally reveal or hide material. In LaTeX, one writes, for example
+
+```latex
+\begin{frame}
+
+Shown three times.
+
+\only<1,3>{Shown, hidden, shown}.
+
+\end{frame}
+```
+
+In this setup, you write `{<...>}` for `<...>`:
+
+```markdown
+Shown three times.
+
+\only{<1,3>}{Shown, hidden, shown}.
+```
+
+If you are writing a lecture script, the same substitution applies to a mode specification, which is used to designate material included in the slides but not in the script:
+
+```markdown
+\mode{<presentation>}
+
+## Slides only
+
+This material is entirely omitted from the script.
+
+#
+
+\mode*
+```
+
+`\mode*` takes us back to the original parsing state.
+
+## Laying a slide out on a grid
+
+There are two options for more elaborate slide layouts than markdown allows you to express. You can use the beamer `columns` environment, just like any other LaTeX within markdown. The templates used here also set up a 9x8 `textpos` grid. See [script-sample.md](scripts/script-sample.md) for details on how to use this grid.
+
+The rationale for doing this is explained in a blog post about an earlier version of this setup: ["Easy Lecture Slides Made Difficult with Pandoc and Beamer."](http://andrewgoldstone.com/blog/2014/12/24/slides/)
+
+## Colors
+
+I have set this up to meet my preference for dark slides with light text. If that is not your preference, note that this color scheme is specified in [scuro_slides.latex](scuro_slides.latex#45) and then turned on by the Makefile when it sets `scuro=true` in the invocation of pandoc to generate slides.
 
