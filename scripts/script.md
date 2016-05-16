@@ -13,7 +13,6 @@ biblatex: true
 biblatex-chicago: true
 biblatexoptions: [notes, noibid]
 bibliography: ../sources.bib
-fontsize: 12pt
 ---
 
 # 0:00
@@ -58,6 +57,21 @@ But the script will only show a single slide, collapsing the increments together
 # note to self: BUILD
 
 to remind you to advance the slide. More complex "builds" are possible using beamer overlays. Beamer overlay specifications go in between `{<...>}` rather than just `<...>` as they would in LaTeX.
+
+## Beamer columns
+
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.5\textwidth}
+\includegraphics[width=\textwidth]{../media/proj.pdf}
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=\textwidth]{../media/proj.pdf}
+\end{column}
+\end{columns}
+
+#
+
+Beamer's `columns` provide a way to construct many layouts. For even finer control, use `textpos`:
 
 ## Image positioning
 
