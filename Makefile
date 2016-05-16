@@ -14,16 +14,16 @@ slides_pdf := $(patsubst %.tex,%.pdf,$(slides_notes_tex) $(slides_scripts_tex))
 handouts_notes_tex := $(patsubst notes/%.md,handouts/%.tex,$(notes_md))
 handouts_notes_pdf := $(patsubst %.tex,%.pdf,$(handouts_notes_tex))
 
-pdfs := $(notes_pdf) $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf)
+# notes_pdf is handled separately
+pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf)
 
 $(notes_tex): lectures/%.tex: notes/%.md
 	mkdir -p lectures
 	pandoc $< \
 	    -t beamer \
 	    --template scuro_slides.latex \
-	    -V nup=4 \
 	    -V beamer-notes=true \
-	    -V fontsize=8pt \
+	    -V fontsize=10pt \
 	    --latex-engine xelatex \
 	    --filter overlay_filter \
 	    -o $@
@@ -34,6 +34,7 @@ $(scripts_tex): lectures/%.tex: scripts/%.md
 	    -t beamer \
 	    --template scuro_talk.latex \
 	    --slide-level 2 \
+	    -V fontsize=12pt \
 	    --latex-engine xelatex \
 	    --filter overlay_filter \
 	    -o $@
@@ -43,6 +44,7 @@ $(slides_notes_tex): slides/%.tex: notes/%.md
 	pandoc $< \
 	    -t beamer \
 	    --template scuro_slides.latex \
+	    -V scuro=true \
 	    --slide-level 1 \
 	    --latex-engine xelatex \
 	    --filter overlay_filter \
@@ -53,6 +55,7 @@ $(slides_scripts_tex): slides/%.tex: scripts/%.md
 	pandoc $< \
 	    -t beamer \
 	    --template scuro_slides.latex \
+	    -V scuro=true \
 	    --slide-level 2 \
 	    --latex-engine xelatex \
 	    --filter overlay_filter \
@@ -63,35 +66,40 @@ $(handouts_notes_tex): handouts/%.tex: notes/%.md
 	pandoc $< \
 	    -t beamer \
 	    --template scuro_slides.latex \
-	    -V nup=4 \
+	    -V beamer-handout=true \
+	    -V classoption=handout \
 	    --slide-level 1 \
 	    --latex-engine xelatex \
 	    --filter overlay_filter \
 	    -o $@
 
-.PHONY: $(pdfs) all clean reallyclean
+.PHONY: $(pdfs) $(notes_pdf) all clean reallyclean
 $(pdfs): %.pdf: %.tex
 	cd $(dir $<); \
+	    latexmk -xelatex $(if $(latex_verbose),-verbose) \
+	       -outdir=tmp $(notdir $<)
+	mv $(dir $@)tmp/$(notdir $@) $@
+	rm -r $(dir $@)tmp
+
+$(notes_pdf): %.pdf: %.tex
+	cd $(dir $<); \
 	    latexmk -xelatex $(if $(latex_verbose),-verbose) $(notdir $<)
+	pdfjam --nup 2x2 --landscape $(dir $@)tmp/$(notdir $@) -o $@
+	rm -r $(dir $@)tmp
 
-all: $(pdfs)
-
+all: $(pdfs) $(notes_pdfs)
 
 # clean up everything except final pdfs
 clean:
-	for (d in lectures slides handouts); do \
-	    cd $$d;\
-	    latexmk -c;\
-	    rm -rf *.nav *.snm *.tex;\
-	done
-
+	rm -rf lectures/tmp slides/tmp handouts/tmp
+	rm -f lectures/*.tex
+	rm -f slides/*.tex
+	rm -f handouts/*.tex
 
 # clean up everything including pdfs
-reallyclean:
-	for (d in lectures slides handouts); do \
-	    cd $$d;\
-	    latexmk -C;\
-	    rm -rf *.nav *.snm *.tex;\
-	done
+reallyclean: clean
+	rm -f lectures/*.pdf
+	rm -f slides/*.pdf
+	rm -f handouts/*.pdf
 
 .DEFAULT_GOAL := all
