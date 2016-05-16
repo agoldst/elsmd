@@ -42,8 +42,8 @@ $if(CJKmainfont)$
 $endif$
 \fi
 
-% Theming: this (alas) duplicates code in the beamer_slides template
-% colors: white text on 90% black background
+$if(scuro)$
+% light-on-dark slides: white text on 90% black background
 \setbeamercolor{normal text}{fg=white,bg=black!90}
 
 % light blue as a highlight color
@@ -55,6 +55,7 @@ $endif$
 \setbeamercolor*{palette quaternary}{use=structure,fg=structure.fg!95!black,bg=black!80}
 
 \setbeamercolor*{framesubtitle}{fg=white}
+$endif$
 
 % use system fonts. The sans font will be used
 \usefonttheme{professionalfonts}
@@ -141,10 +142,6 @@ $endif$
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 \usepackage[multidot]{grffile}
-
-\usepackage[overlay,absolute]{textpos}
-\TPGrid[10 mm,8 mm]{9}{8} % 9x8 grid with units of 12 mm and 10 mm
-
 \setlength{\parskip}{\baselineskip}
 
 $if(links-as-notes)$
@@ -182,7 +179,6 @@ $if(dir)$
 \fi
 $endif$
 
-\usepackage{pgfpages}
 $if(beamer-notes)$
 \setbeameroption{show notes}
 $endif$
@@ -196,9 +192,65 @@ $endif$
 }
 \makeatother
 
-$if(nup)$
-\pgfpagesuselayout{$nup$ on 1}[letterpaper,landscape,border shrink=0.125in]
+$if(beamer-handout)$
+\usepackage{pgfpages}
+\pgfpagesdeclarelayout{2 on 1 with notes landscape}{
+    \edef\pgfpageoptionheight{\the\paperheight}
+    \edef\pgfpageoptionwidth{\the\paperwidth}
+    \edef\pgfpageoptionborder{0pt}
+}{
+    \setkeys{pgfpagesuselayoutoption}{landscape}
+    \pgfpagesphysicalpageoptions{%
+        logical pages=4,%
+        physical height=\pgfpageoptionheight,%
+        physical width=\pgfpageoptionwidth,%
+    %      last logical shipout=3%
+        last logical shipout=2%
+    }
+    \pgfpageslogicalpageoptions{1}{%
+        scale=1,
+        center=\pgfpoint{.3\pgfphysicalwidth}{.75\pgfphysicalheight}%
+    }%
+    \pgfpageslogicalpageoptions{2}{%
+        scale=1,
+        center=\pgfpoint{.3\pgfphysicalwidth}{.25\pgfphysicalheight}%
+    }%
+    \pgfpageslogicalpageoptions{3}{%
+       border shrink=\pgfpageoptionborder,%
+       resized width=.7\pgfphysicalwidth,%
+       resized height=.4\pgfphysicalheight,%
+       center=\pgfpoint{.75\pgfphysicalwidth}{.3\pgfphysicalheight},%
+       copy from=3
+    }%
+    \pgfpageslogicalpageoptions{4}{%
+        border shrink=\pgfpageoptionborder,%
+        resized width=.7\pgfphysicalwidth,%
+        resized height=.4\pgfphysicalheight,%
+        center=\pgfpoint{.75\pgfphysicalwidth}{.8\pgfphysicalheight},%
+        copy from=4
+    }%
+    \AtBeginDocument{
+        \newbox\notesbox
+        \setbox\notesbox=\vbox{
+            \hsize=\paperwidth
+            \vskip-1in\hskip-1in\vbox{
+                \vskip1cm
+            }
+        }
+        \pgfpagesshipoutlogicalpage{3}\copy\notesbox
+        \pgfpagesshipoutlogicalpage{4}\copy\notesbox
+    }
+}
+
+\pgfpagesuselayout{2 on 1 with notes landscape}[letterpaper,%
+border shrink=0.125in]
 $endif$
+
+
+
+
+\usepackage[overlay,absolute]{textpos}
+\TPGrid[10 mm,8 mm]{9}{8} % 9x8 grid with units of 12 mm and 10 mm
 
 $for(header-includes)$
 $header-includes$
