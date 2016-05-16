@@ -2,6 +2,7 @@
 title: A Sample Set of Slides
 author: Your Name Here
 date: Totally Not the Last Minute
+sansfont: Gill Sans
 ---
 
 # An ordinary slide

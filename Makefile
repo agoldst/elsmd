@@ -10,7 +10,7 @@ scripts_tex := $(patsubst scripts/%.md,lectures/%.tex,$(scripts_md))
 scripts_pdf := $(patsubst %.tex,%.pdf,$(scripts_tex)) 
 slides_notes_tex := $(patsubst notes/%.md,slides/%.tex,$(notes_md))
 slides_scripts_tex := $(patsubst scripts/%.md,slides/%.tex,$(scripts_md))
-slides_pdf := $(patsubst %.tex,%.pdf,$(scripts_notes_tex) $(slides_scripts_tex))
+slides_pdf := $(patsubst %.tex,%.pdf,$(slides_notes_tex) $(slides_scripts_tex))
 handouts_notes_tex := $(patsubst notes/%.md,handouts/%.tex,$(notes_md))
 handouts_notes_pdf := $(patsubst %.tex,%.pdf,$(handouts_notes_tex))
 
