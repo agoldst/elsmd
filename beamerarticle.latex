@@ -1,5 +1,7 @@
 
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{article}
+
+\usepackage[compact]{titlesec}
 \usepackage{beamerarticle}
 $if(beamer-file)$
 \setjobnamebeamerversion{$beamer-file$}
@@ -186,6 +188,18 @@ $endif$
 $for(header-includes)$
 $header-includes$
 $endfor$
+
+\usepackage{titling}
+\setlength{\droptitle}{-60 pt}
+\renewcommand{\maketitlehooka}{\begin{flushleft}}
+\pretitle{}
+\posttitle{\\}
+\preauthor{}
+\postauthor{\\}
+\predate{}
+\postdate{}
+\renewcommand{\maketitlehookd}{\end{flushleft}}
+
 
 $if(title)$
 \title{$title$}
