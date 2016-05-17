@@ -98,7 +98,8 @@ $(pdfs): %.pdf: %.tex
 
 $(notes_pdf): %.pdf: %.tex
 	cd $(dir $<); \
-	    latexmk -xelatex $(if $(latex_verbose),-verbose) $(notdir $<)
+	    latexmk -xelatex $(if $(latex_verbose),-verbose) \
+	       -outdir=tmp $(notdir $<)
 	pdfjam --nup 2x2 --landscape $(dir $@)tmp/$(notdir $@) -o $@
 	rm -r $(dir $@)tmp
 
