@@ -94,11 +94,13 @@ LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
 
 .PHONY: $(phony_pdfs) all clean reallyclean
 $(pdfs): %.pdf: %.tex
+	rm -rf $(dir $@)$(temp_dir)
 	cd $(dir $<); $(LATEXMK) $(notdir $<)
 	mv $(dir $@)$(temp_dir)/$(notdir $@) $@
 	rm -r $(dir $@)$(temp_dir)
 
 $(notes_pdf): %.pdf: %.tex
+	rm -rf $(dir $@)$(temp_dir)
 	cd $(dir $<); $(LATEXMK) $(notdir $<)
 	pdfjam --nup 2x2 --landscape $(dir $@)$(temp_dir)/$(notdir $@) -o $@
 	rm -r $(dir $@)$(temp_dir)
