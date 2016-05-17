@@ -107,14 +107,12 @@ all: $(pdfs) $(notes_pdfs)
 # clean up everything except final pdfs
 clean:
 	rm -rf lectures/tmp slides/tmp handouts/tmp
-	rm -f lectures/*.tex
-	rm -f slides/*.tex
-	rm -f handouts/*.tex
+	rm -f $(notes_tex) $(scripts_tex) \
+	    $(slides_notes_tex) $(slides_scripts_tex) \
+	    $(handouts_notes_tex) $(handouts_scripts_tex) 
 
 # clean up everything including pdfs
 reallyclean: clean
-	rm -f lectures/*.pdf
-	rm -f slides/*.pdf
-	rm -f handouts/*.pdf
+	rm -f $(pdfs) $(notes_pdf)
 
 .DEFAULT_GOAL := all
