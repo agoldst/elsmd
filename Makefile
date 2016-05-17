@@ -105,7 +105,7 @@ $(notes_pdf): %.pdf: %.tex
 	pdfjam --nup 2x2 --landscape $(dir $@)$(temp_dir)/$(notdir $@) -o $@
 	rm -r $(dir $@)$(temp_dir)
 
-all: $(pdfs) $(notes_pdfs)
+all: $(pdfs) $(notes_pdf)
 
 # clean up everything except final pdfs
 clean:
