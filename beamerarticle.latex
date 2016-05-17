@@ -64,6 +64,9 @@ $endif$
 % in blocks too
 \addtobeamertemplate{block begin}{}{\justifying}
 
+\setbeamertemplate{frame begin}{\par\noindent\rule{\textwidth}{0.25pt}\par}
+\setbeamertemplate{frame end}{\par\noindent\rule{\textwidth}{0.25pt}\par}
+
 \ifxetex
   \usepackage[setpagesize=false, % page size defined by xetex
               unicode=false, % unicode breaks when used with xetex
