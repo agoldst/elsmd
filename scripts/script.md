@@ -58,20 +58,9 @@ But the script will only show a single slide, collapsing the increments together
 
 to remind you to advance the slide. More complex "builds" are possible using beamer overlays. Beamer overlay specifications go in between `{<...>}` rather than just `<...>` as they would in LaTeX.
 
-## Beamer columns
+# Grid layouts
 
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.5\textwidth}
-\includegraphics[width=\textwidth]{../media/proj.pdf}
-\end{column}
-\begin{column}{0.5\textwidth}
-\includegraphics[width=\textwidth]{../media/proj.pdf}
-\end{column}
-\end{columns}
-
-#
-
-Beamer's `columns` provide a way to construct many layouts. For even finer control, use `textpos`:
+For fine layout control for images or other material that can't just be set like ordinary text in slides, use `textpos`:
 
 ## Image positioning
 
@@ -115,4 +104,21 @@ Text on the grid works too.
 
 # Slides only slide here
 
-Again I suggest including a note to yourself that a slide has been omitted. Note that the terminating top level header of the slide is not found in the script. 
+Again I suggest including a note to yourself that a slide has been omitted. Note that the terminating top level header of the slide is not found in the script.
+
+An alternative to textpos is Beamer's `columns` environment, which lets you construct many layouts. You may still find it useful to use the textpos grid units rather than multiples of `\textwidth` (which will take up a lot of space in the script).
+
+## Beamer columns
+
+\begin{columns}[T]
+\begin{column}{4.5\TPHorizModule}
+\includegraphics[width=4\TPHorizModule]{../media/proj.pdf}
+\end{column}
+\begin{column}{4.5\TPHorizModule}
+\includegraphics[width=4\TPHorizModule]{../media/proj.pdf}
+\end{column}
+\end{columns}
+
+#
+
+For an example of the interaction between `textpos` and overlay specifications, see `notes/notes-sample.md`.
