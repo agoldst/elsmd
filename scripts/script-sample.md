@@ -4,9 +4,8 @@ author: |
   Scripted Talker  
   University of Careful Planning
 date: May 1, 1894
-mainfont: Garamond Premier Pro
+mainfont: Hoefler Text
 mainfontoptions:
- - BoldFont=Garamond Premier Pro Semibold
  - Numbers=OldStyle
 sansfont: Gill Sans
 biblatex: true

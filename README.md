@@ -58,15 +58,15 @@ Set the typeface for the slides:
 sansfont: Gill Sans
 ```
 
-Keynote gave me a taste for Gill Sans. If you don't have or like Gill, [Fira Sans](https://www.mozilla.org/en-US/styleguide/products/firefox-os/typeface/) is free and worth considering. The beamer default is not nice.
+Keynote gave me a taste for Gill Sans. If you don't have or like Gill, [Fira Sans](https://www.mozilla.org/en-US/styleguide/products/firefox-os/typeface/) is free and worth considering. The beamer default is not nice. To use the `mainfont` rather than the `sansfont` on slides, adjust the `usefonttheme` command in the [slides template](elsmd-slides.latex).
 
 ## Lecture-script typeface
 
 ```yaml
-mainfont: Minion Pro
+mainfont: Hoefler Text
 ```
 
-The `mainfont` is only used for lecture scripts. To change this, adjust the `usefonttheme` command in the [slides template](elsmd-slides.latex). The default is TeX's, that is, Computer Modern (which is a bit spindly for a script you have to read from while talking and gesticulating). A document font size of 12pt is set in the Makefile.
+The `mainfont` is only used for lecture scripts. If you omit this, you'll get  Computer Modern, which is a bit spindly for a script you have to read from while talking and gesticulating. Choose something you find easy to read. A document font size of 12pt is set in the Makefile.
 
 ## Bibliography
 
