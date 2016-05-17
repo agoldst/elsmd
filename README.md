@@ -1,6 +1,6 @@
 # Markdown to lecture slides
 
-...using pandoc, with some Beamer bells and whistles, by a Keynote refugee.
+Using pandoc, with some Beamer bells and whistles, by a Keynote refugee.
 
 This setup is designed for two kinds of talking:
 
@@ -8,15 +8,19 @@ This setup is designed for two kinds of talking:
 
 2. *Lecturing from a script*. You write out a talk and read it, stepping through slides as you go.
 
-In either case you may wish to distribute a *handout* with your slides to your listeners.
+In either case you may wish to distribute a handout with your slides to your listeners.
 
-For lectures from notes, create markdown files in the `notes` directory, on the model of [notes/notes-sample.md](notes/notes-sample.md). Using `make` then generates the following PDF files:
+For lectures from notes, create markdown files in the `notes` directory, on the model of [notes/notes-sample.md](notes/notes-sample.md). Using `make` then generates the following PDF files (links go to the results of `make` on this repository)
 
-1. [slides/*.pdf](slides/notes-sample.pdf): slides.
-1. [lectures/*.pdf](lectures/notes-sample.pdf): slides and notes interleaved, two slides and two note-pages to a sheet, for the lecturer.
-1. [handouts/*.pdf](handouts/notes-sample.pdf): sheets with two slides on the left and blank space on the right for audience notes.
+1. `lectures/*.pdf`: slides and notes interleaved, two slides and two note-pages to a sheet, for the lecturer. Example: [lectures/notes-sample.pdf](http://andrewgoldstone.com/elsmd/lectures/notes-sample.pdf).
+1. `slides/*.pdf`: slides. Example: [slides/notes-sample.pdf](http://andrewgoldstone.com/elsmd/slides/notes-sample.pdf).
+1. `handouts/*.pdf`: sheets with two slides on the left and blank space on the right for audience notes. Example: [handouts/notes-sample.pdf](http://andrewgoldstone.com/elsmd/handouts/notes-sample.pdf).
 
-For lectures from scripts, create markdown files in the `scripts` directory, on the model of [scripts/script-sample.md](scripts/script-sample.md). Using `make` then generates [slides/*.pdf](slides/script-sample.pdf) and [handouts/*.pdf](handouts/script-sample.pdf) exactly as with the notes, but [lectures/*.pdf](lectures/script-sample.pdf) consists of a talk script to read rather than the notes pages.
+For lectures from scripts, create markdown files in the `scripts` directory, on the model of [scripts/script-sample.md](scripts/script-sample.md). Using `make` then generates:
+
+1. `lectures/*.pdf`: a talk script to read out (rather than script pages). Example: [lectures/script-sample.pdf](http://andrewgoldstone.com/elsmd/lectures/script-sample.pdf).
+1. `slides/*.pdf`: slides, as above. Example: [slides/script-sample.pdf](http://andrewgoldstone.com/elsmd/slides/script-sample.pdf).
+1. `handouts/*.pdf`: slide handout, as above. Example: [handouts/script-sample.pdf](http://andrewgoldstone.com/elsmd/handouts/script-sample.pdf).
 
 I used to use Keynote as a presentation viewer (first converting PDFs using [PDF to Keynote](http://www.cs.hmc.edu/~oneill/freesoftware/pdftokeynote.html)). I don't like the presentation mode in the most recent Keynote, and I have switched to using [Présentation](http://iihm.imag.fr/blanch/software/osx-presentation/), a free program with an excellent presentation mode for PDFs, controllable from the keyboard.
 
