@@ -43,7 +43,7 @@ PANDOC := pandoc -t beamer $(if $(xelatex),--latex-engine xelatex) \
 
 $(notes_tex): lectures/%.tex: notes/%.md
 	mkdir -p lectures
-	$(PANDOC) --template scuro_slides.latex \
+	$(PANDOC) --template elsmd-slides.latex \
 	    -V beamer-notes=true \
 	    -V fontsize=10pt \
 	    -o $@ $<
@@ -57,21 +57,21 @@ $(scripts_tex): lectures/%.tex: scripts/%.md
 
 $(slides_notes_tex): slides/%.tex: notes/%.md
 	mkdir -p slides
-	$(PANDOC) --template scuro_slides.latex \
+	$(PANDOC) --template elsmd-slides.latex \
 	    -V scuro=true \
 	    --slide-level 1 \
 	    -o $@ $<
 
 $(slides_scripts_tex): slides/%.tex: scripts/%.md
 	mkdir -p slides
-	$(PANDOC) --template scuro_slides.latex \
+	$(PANDOC) --template elsmd-slides.latex \
 	    -V scuro=true \
 	    --slide-level 2 \
 	    -o $@ $<
 
 $(handouts_notes_tex): handouts/%.tex: notes/%.md
 	mkdir -p handouts
-	$(PANDOC) --template scuro_slides.latex \
+	$(PANDOC) --template elsmd-slides.latex \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    --slide-level 1 \
@@ -79,7 +79,7 @@ $(handouts_notes_tex): handouts/%.tex: notes/%.md
 
 $(handouts_scripts_tex): handouts/%.tex: scripts/%.md
 	mkdir -p handouts
-	$(PANDOC) --template scuro_slides.latex \
+	$(PANDOC) --template elsmd-slides.latex \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    --slide-level 2 \
