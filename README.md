@@ -37,6 +37,7 @@ You could simply clone or download this repository for each family of talks (e.g
 - pandoc
 - TeX Live, including xelatex, latexmk, and pdfjam (for speaker notes)
 - python
+- pandocfilters (`pip install pandocfilters`)
 - make
 
 The pdfjam program is used to create 4-up speaker notes (two slides and two pages of notes on each page). One can't use the `pgfpages` package for this because beamer's `\note` is not compatible with `pgfpages` layouts under xelatex. `pgfpages` *is* used to create the handouts (with two slides on the left and blank space on the right, for audiences), since handouts hide `\notes` anyway.
@@ -44,6 +45,8 @@ The pdfjam program is used to create 4-up speaker notes (two slides and two page
 latexmk is used to control xelatex and biber. This has the advantage of automating the multiple passes needed for using biblatex citations. It has the disadvantage of creating many auxiliary files. The Make rules here wipe out all the auxiliary files once the PDF has been created. This trades reduced clutter for speed, since it means that latexmk can never skip any passes after an initial run. It will take several seconds to generate even a small slideshow. Modern computing!
 
 # More detail on the source markdown
+
+A bit more detail on the source markdown can be found in the sample files: [notes/notes-sample.md](notes/notes-sample.md) for a lecture from notes and [scripts/script-sample.md](scripts/script-sample.md) for a lecture from a script.
 
 The PDFs are generated from two custom [pandoc templates](http://pandoc.org/README.html#templates), which are included here. [elsmd-slides.latex](elsmd-slides.latex) is the template for slides, notes, and handouts. [beamerarticle.latex](beamerarticle.latex) is the template for a lecture script. Both are based on pandoc's default Beamer template. My templates allow a few extra YAML metadata variables to be set in the source markdown:
 
