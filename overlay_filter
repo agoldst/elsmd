@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+"""overlay_filter
+
+Simplistic pandoc filter to include beamer overlay specifications on
+inline tex in markdown
+
+Whereas in normal beamer LaTeX you'd write
+
+    \cmd<overlay>{...}
+
+in markdown write
+
+    \cmd{<overlay>}{...}
+
+then process with
+
+    pandoc --filter overlay_filter
+
+Environments are passed through to LaTeX, so there's no need to filter
+them; write onlyenv as normal, for example.
+
+Requires pandocfilters (pip install pandocfilters).
+"""
+
+from pandocfilters import toJSONFilter, RawInline
+import re
+
+ov_pat = re.compile(r'^(\\\w+)(\{<[^>]+>})(.*)$',flags=re.DOTALL)
+
+def overlay_filter(key, value, fmt, meta):
+    if key == 'RawInline' and value[0] == 'tex':
+        m = ov_pat.match(value[1])
+        if m:
+            c = m.group(1)
+            c += re.sub(r'^\{|}$', "", m.group(2))
+            c += m.group(3)
+            return RawInline("tex", c)
+
+if __name__ == "__main__":
+    toJSONFilter(overlay_filter)
+
+
