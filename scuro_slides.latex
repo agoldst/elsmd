@@ -181,7 +181,6 @@ $endif$
 
 $if(beamer-notes)$
 \setbeameroption{show notes}
-$endif$
 \setbeamertemplate{note page}[plain]
 
 % force notes page on each slide
@@ -191,10 +190,11 @@ $endif$
   \gdef\beamer@notes{{}}%
 }
 \makeatother
+$endif$
 
 $if(beamer-handout)$
 \usepackage{pgfpages}
-\pgfpagesdeclarelayout{2 on 1 with notes landscape}{
+\pgfpagesdeclarelayout{2 on 1 with blanks landscape}{
     \edef\pgfpageoptionheight{\the\paperheight}
     \edef\pgfpageoptionwidth{\the\paperwidth}
     \edef\pgfpageoptionborder{0pt}
@@ -242,11 +242,9 @@ $if(beamer-handout)$
     }
 }
 
-\pgfpagesuselayout{2 on 1 with notes landscape}[letterpaper,%
+\pgfpagesuselayout{2 on 1 with blanks landscape}[letterpaper,%
 border shrink=0.125in]
 $endif$
-
-
 
 
 \usepackage[overlay,absolute]{textpos}
