@@ -160,11 +160,11 @@ This material is entirely omitted from the script.
 
 ## Laying a slide out on a grid
 
-There are two options for more elaborate slide layouts than markdown allows you to express. You can use the beamer `columns` environment, just like any other LaTeX within markdown. The templates used here also set up a 9x8 `textpos` grid. See [script-sample.md](scripts/script-sample.md) for details on how to use this grid.
+There are two options for more elaborate slide layouts than markdown allows you to express. You can use the beamer `columns` environment, just like any other LaTeX within markdown. The templates used here also set up a 9x8 `textpos` grid. See [notes-sample.md](notes/notes-sample.md) and [script-sample.md](scripts/script-sample.md) for details on how to use this grid.
 
 The rationale for doing this is explained in a blog post about an earlier version of this setup: ["Easy Lecture Slides Made Difficult with Pandoc and Beamer."](http://andrewgoldstone.com/blog/2014/12/24/slides/)
 
 ## Colors
 
-I have set this up to meet my preference for dark slides with light text, which I call "scuro" (I use that name for an [R package](agoldst/scuro) with the same purpose for R markdown-based slides).  If that is not your preference, note that this color scheme is specified in [elsmd-slides.latex](elsmd-slides.latex#45) and then turned on by the Makefile when it sets `scuro=true` in the invocation of pandoc to generate slides.
+I have set this up to meet my preference for dark slides with light text, which I call "scuro" (I use that name for an [R package](http://github.com/agoldst/scuro) with the same purpose for R markdown-based slides).  If that is not your preference, note that this color scheme is specified in [elsmd-slides.latex](elsmd-slides.latex#45) and then turned on by the Makefile when it sets `scuro=true` in the invocation of pandoc to generate slides.
 
