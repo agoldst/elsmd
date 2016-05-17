@@ -13,9 +13,12 @@ slides_scripts_tex := $(patsubst scripts/%.md,slides/%.tex,$(scripts_md))
 slides_pdf := $(patsubst %.tex,%.pdf,$(slides_notes_tex) $(slides_scripts_tex))
 handouts_notes_tex := $(patsubst notes/%.md,handouts/%.tex,$(notes_md))
 handouts_notes_pdf := $(patsubst %.tex,%.pdf,$(handouts_notes_tex))
+handouts_script_tex := $(patsubst scripts/%.md,handouts/%.tex,$(scripts_md))
+handouts_script_pdf := $(patsubst %.tex,%.pdf,$(handouts_script_tex))
 
 # notes_pdf is handled separately
-pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf)
+pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf) \
+    $(handouts_script_pdf)
 
 $(notes_tex): lectures/%.tex: notes/%.md
 	mkdir -p lectures
@@ -32,7 +35,7 @@ $(scripts_tex): lectures/%.tex: scripts/%.md
 	mkdir -p lectures
 	pandoc $< \
 	    -t beamer \
-	    --template scuro_talk.latex \
+	    --template beamerarticle.latex \
 	    --slide-level 2 \
 	    -V fontsize=12pt \
 	    --latex-engine xelatex \
@@ -69,6 +72,18 @@ $(handouts_notes_tex): handouts/%.tex: notes/%.md
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    --slide-level 1 \
+	    --latex-engine xelatex \
+	    --filter overlay_filter \
+	    -o $@
+
+$(handouts_script_tex): handouts/%.tex: scripts/%.md
+	mkdir -p handouts
+	pandoc $< \
+	    -t beamer \
+	    --template scuro_slides.latex \
+	    -V beamer-handout=true \
+	    -V classoption=handout \
+	    --slide-level 2 \
 	    --latex-engine xelatex \
 	    --filter overlay_filter \
 	    -o $@
