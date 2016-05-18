@@ -127,6 +127,10 @@ $if(lhs)$
 $endif$
 $if(highlighting-macros)$
 $highlighting-macros$
+% tweak code highlighting environment
+\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
+% new environment to be used with R markdown (a knitr hook must also be set)
+\DefineVerbatimEnvironment{ROutput}{Verbatim}{frame=single,fontsize=\footnotesize}
 $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
