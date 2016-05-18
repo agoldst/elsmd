@@ -37,7 +37,6 @@ You could simply clone or download this repository for each family of talks (e.g
 - pandoc
 - TeX Live, including xelatex, latexmk, and pdfjam (for speaker notes)
 - python
-- pandocfilters (`pip install pandocfilters`)
 - make
 
 The pdfjam program is used to create 4-up speaker notes (two slides and two pages of notes on each page). One can't use the `pgfpages` package for this because beamer's `\note` is not compatible with `pgfpages` layouts under xelatex. `pgfpages` *is* used to create the handouts (with two slides on the left and blank space on the right, for audiences), since handouts hide `\notes` anyway.

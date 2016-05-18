@@ -20,11 +20,52 @@ then process with
 Environments are passed through to LaTeX, so there's no need to filter
 them; write onlyenv as normal, for example.
 
-Requires pandocfilters (pip install pandocfilters).
+The code for walking the tree in 'walk' and the main block is taken from
+the pandocfilters python module, https://github.com/jgm/pandocfilters,
+(C) 2013 John MacFarlane. (This way we do not require the user's
+system's python to have pandocfilters installed.)
+
+This file incorporates work covered by the following copyright and
+permission notice:
+
+    Copyright (c) 2013, John MacFarlane
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:
+
+     - Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+     - Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer
+     in the documentation and/or other materials provided with the
+     distribution.
+
+     - Neither the name of John Macfarlane nor the names of its
+     contributors may be used to endorse or promote products derived
+     from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+
 """
 
-from pandocfilters import toJSONFilter, RawInline
 import re
+import sys
+import json
+import codecs
 
 ov_pat = re.compile(r'^(\\\w+)(\{<[^>]+>})(.*)$',flags=re.DOTALL)
 
@@ -35,9 +76,42 @@ def overlay_filter(key, value, fmt, meta):
             c = m.group(1)
             c += re.sub(r'^\{|}$', "", m.group(2))
             c += m.group(3)
-            return RawInline("tex", c)
+            return { "t": "RawInline", "c": ["tex", c] }
+
+def walk(x, action, format, meta):
+    """Walk a tree, applying an action to every object.
+    Returns a modified tree.
+    """
+    if isinstance(x, list):
+        array = []
+        for item in x:
+            if isinstance(item, dict) and 't' in item:
+                res = action(item['t'], item['c'], format, meta)
+                if res is None:
+                    array.append(walk(item, action, format, meta))
+                elif isinstance(res, list):
+                    for z in res:
+                        array.append(walk(z, action, format, meta))
+                else:
+                    array.append(walk(res, action, format, meta))
+            else:
+                array.append(walk(item, action, format, meta))
+        return array
+    elif isinstance(x, dict):
+        obj = {}
+        for k in x:
+            obj[k] = walk(x[k], action, format, meta)
+        return obj
+    else:
+        return x
 
 if __name__ == "__main__":
-    toJSONFilter(overlay_filter)
-
+    input_stream = codecs.getreader("utf-8")(sys.stdin)
+    doc = json.loads(input_stream.read())
+    if len(sys.argv) > 1:
+        format = sys.argv[1]
+    else:
+        format = ""
+    altered = walk(doc, overlay_filter, format, doc[0]['unMeta'])
+    json.dump(altered, sys.stdout)
 
