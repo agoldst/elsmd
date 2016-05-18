@@ -17,6 +17,10 @@ always_latexmk :=
 # faster, and there are some packages with which xelatex is incompatible.
 xelatex := true
 
+# directories for markdown sources: notes and scripts
+NOTES := notes
+SCRIPTS := scripts
+
 ## ---- special external files ----
 
 # Normally these do not need to be changed
@@ -46,54 +50,54 @@ LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
 
 ## ---- build rules ----
 
-notes_md := $(wildcard notes/*.md)
-scripts_md := $(wildcard scripts/*.md)
+notes_md := $(wildcard $(NOTES)/*.md)
+scripts_md := $(wildcard $(SCRIPTS)/*.md)
 
-notes_tex := $(patsubst notes/%.md,lectures/%.tex,$(notes_md))
+notes_tex := $(patsubst $(NOTES)/%.md,lectures/%.tex,$(notes_md))
 notes_pdf := $(patsubst %.tex,%.pdf,$(notes_tex)) 
-scripts_tex := $(patsubst scripts/%.md,lectures/%.tex,$(scripts_md))
+scripts_tex := $(patsubst $(SCRIPTS)/%.md,lectures/%.tex,$(scripts_md))
 scripts_pdf := $(patsubst %.tex,%.pdf,$(scripts_tex)) 
-slides_notes_tex := $(patsubst notes/%.md,slides/%.tex,$(notes_md))
-slides_scripts_tex := $(patsubst scripts/%.md,slides/%.tex,$(scripts_md))
+slides_notes_tex := $(patsubst $(NOTES)/%.md,slides/%.tex,$(notes_md))
+slides_scripts_tex := $(patsubst $(SCRIPTS)/%.md,slides/%.tex,$(scripts_md))
 slides_pdf := $(patsubst %.tex,%.pdf,$(slides_notes_tex) $(slides_scripts_tex))
-handouts_notes_tex := $(patsubst notes/%.md,handouts/%.tex,$(notes_md))
+handouts_notes_tex := $(patsubst $(NOTES)/%.md,handouts/%.tex,$(notes_md))
 handouts_notes_pdf := $(patsubst %.tex,%.pdf,$(handouts_notes_tex))
-handouts_scripts_tex := $(patsubst scripts/%.md,handouts/%.tex,$(scripts_md))
+handouts_scripts_tex := $(patsubst $(SCRIPTS)/%.md,handouts/%.tex,$(scripts_md))
 handouts_scripts_pdf := $(patsubst %.tex,%.pdf,$(handouts_scripts_tex))
 
 # notes_pdf is handled separately
 pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf) \
     $(handouts_scripts_pdf)
 
-$(notes_tex): lectures/%.tex: notes/%.md
+$(notes_tex): lectures/%.tex: $(NOTES)/%.md
 	mkdir -p lectures
 	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V beamer-notes=true \
 	    -V fontsize=10pt \
 	    -o $@ $<
 
-$(scripts_tex): lectures/%.tex: scripts/%.md
+$(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 	mkdir -p lectures
 	$(PANDOC) --template $(SCRIPT_TMPL) \
 	    --slide-level 2 \
 	    -V fontsize=12pt \
 	    -o $@ $<
 
-$(slides_notes_tex): slides/%.tex: notes/%.md
+$(slides_notes_tex): slides/%.tex: $(NOTES)/%.md
 	mkdir -p slides
 	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V scuro=true \
 	    --slide-level 1 \
 	    -o $@ $<
 
-$(slides_scripts_tex): slides/%.tex: scripts/%.md
+$(slides_scripts_tex): slides/%.tex: $(SCRIPTS)/%.md
 	mkdir -p slides
 	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V scuro=true \
 	    --slide-level 2 \
 	    -o $@ $<
 
-$(handouts_notes_tex): handouts/%.tex: notes/%.md
+$(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
 	mkdir -p handouts
 	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V beamer-handout=true \
@@ -101,7 +105,7 @@ $(handouts_notes_tex): handouts/%.tex: notes/%.md
 	    --slide-level 1 \
 	    -o $@ $<
 
-$(handouts_scripts_tex): handouts/%.tex: scripts/%.md
+$(handouts_scripts_tex): handouts/%.tex: $(SCRIPTS)/%.md
 	mkdir -p handouts
 	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V beamer-handout=true \
