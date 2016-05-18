@@ -117,7 +117,7 @@ A titled slide:
 Script text.
 ```
 
-The first-level headers can be empty, as in the first example, or contain text, as in the second example. Since this text will only appear in the script, not on the slides, it is useful for "stage directions."
+The first-level headers can be empty, as in the first example, or contain text, as in the second example. Since this text will only appear in the script, not on the slides, it is useful for "stage directions." Note that if you want to write script text between the first (title) slide and the second, you should begin your markdown with a first-level header.
 
 ## Using beamer overlays and modes
 
