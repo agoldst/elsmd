@@ -17,7 +17,34 @@ always_latexmk :=
 # faster, and there are some packages with which xelatex is incompatible.
 xelatex := true
 
-## ---- end config ----
+## ---- special external files ----
+
+# Normally these do not need to be changed
+
+# works if overlay_filter python script is local or in PATH
+OVERLAY_FILTER := overlay_filter
+
+# these work if the two templates are local or in ~/.pandoc/templates
+SLIDES_TMPL := elsmd-slides.latex
+SCRIPT_TMPL := beamerarticle.latex
+
+# temp file subdirectory (created in lectures, slides, handouts)
+# change this if you're using */tmp for something else
+temp_dir := tmp
+
+## ---- commands ----
+
+# Change these only to really change the behavior of the whole setup
+
+PANDOC := pandoc -t beamer $(if $(xelatex),--latex-engine xelatex) \
+    --filter $(OVERLAY_FILTER)
+
+LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
+    -pdf -dvi- -ps- $(if $(latex_quiet),-silent,-verbose) \
+    -outdir=$(temp_dir)
+
+
+## ---- build rules ----
 
 notes_md := $(wildcard notes/*.md)
 scripts_md := $(wildcard scripts/*.md)
@@ -38,40 +65,37 @@ handouts_scripts_pdf := $(patsubst %.tex,%.pdf,$(handouts_scripts_tex))
 pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf) \
     $(handouts_scripts_pdf)
 
-PANDOC := pandoc -t beamer $(if $(xelatex),--latex-engine xelatex) \
-    --filter overlay_filter
-
 $(notes_tex): lectures/%.tex: notes/%.md
 	mkdir -p lectures
-	$(PANDOC) --template elsmd-slides.latex \
+	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V beamer-notes=true \
 	    -V fontsize=10pt \
 	    -o $@ $<
 
 $(scripts_tex): lectures/%.tex: scripts/%.md
 	mkdir -p lectures
-	$(PANDOC) --template beamerarticle.latex \
+	$(PANDOC) --template $(SCRIPT_TMPL) \
 	    --slide-level 2 \
 	    -V fontsize=12pt \
 	    -o $@ $<
 
 $(slides_notes_tex): slides/%.tex: notes/%.md
 	mkdir -p slides
-	$(PANDOC) --template elsmd-slides.latex \
+	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V scuro=true \
 	    --slide-level 1 \
 	    -o $@ $<
 
 $(slides_scripts_tex): slides/%.tex: scripts/%.md
 	mkdir -p slides
-	$(PANDOC) --template elsmd-slides.latex \
+	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V scuro=true \
 	    --slide-level 2 \
 	    -o $@ $<
 
 $(handouts_notes_tex): handouts/%.tex: notes/%.md
 	mkdir -p handouts
-	$(PANDOC) --template elsmd-slides.latex \
+	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    --slide-level 1 \
@@ -79,18 +103,13 @@ $(handouts_notes_tex): handouts/%.tex: notes/%.md
 
 $(handouts_scripts_tex): handouts/%.tex: scripts/%.md
 	mkdir -p handouts
-	$(PANDOC) --template elsmd-slides.latex \
+	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    --slide-level 2 \
 	    -o $@ $<
 
 phony_pdfs := $(if $(always_latexmk),$(pdfs) $(notes_pdf))
-
-temp_dir := tmp
-LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
-    -pdf -dvi- -ps- $(if $(latex_quiet),-silent,-verbose) \
-    -outdir=$(temp_dir)
 
 .PHONY: $(phony_pdfs) all clean reallyclean
 $(pdfs): %.pdf: %.tex
