@@ -67,6 +67,11 @@ $endif$
 \setbeamertemplate{frame begin}{\par\noindent\rule{\textwidth}{0.25pt}\par}
 \setbeamertemplate{frame end}{\par\noindent\rule{\textwidth}{0.25pt}\par}
 
+% prevent figures on slides from floating away in the script
+\usepackage{float}
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+
 \ifxetex
   \usepackage[setpagesize=false, % page size defined by xetex
               unicode=false, % unicode breaks when used with xetex
