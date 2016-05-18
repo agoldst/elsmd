@@ -85,7 +85,7 @@ You can then cite using either pandoc-style `[@citekey]` or LaTeX `\cite{citekey
 To add notes, use beamer's `\note` command (inside `\note{...}`, use LaTeX, not markdown).
 
 
-Handouts and speaker notes both use the Beamer class option `handout`, which collapses incremental slides into one to save paper and (possibly) confusion.
+Handouts use the Beamer class option `handout`, which collapses incremental slides into one to save paper and (possibly) confusion.
 
 ## Lecturing from a script: demarcating slides
 
