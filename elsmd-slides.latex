@@ -55,6 +55,10 @@ $if(scuro)$
 \setbeamercolor*{palette quaternary}{use=structure,fg=structure.fg!95!black,bg=black!80}
 
 \setbeamercolor*{framesubtitle}{fg=white}
+% N.B. we also skip pandoc's default adjustment to figure captions:
+% \setbeamertemplate{caption}[numbered]
+% \setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
 $endif$
 
 % use system fonts. The sans font will be used
@@ -119,6 +123,10 @@ $if(lhs)$
 $endif$
 $if(highlighting-macros)$
 $highlighting-macros$
+% tweak code highlighting environment
+\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
+% new environment to be used with R markdown (a knitr hook must also be set)
+\DefineVerbatimEnvironment{ROutput}{Verbatim}{frame=single,fontsize=\footnotesize}
 $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
