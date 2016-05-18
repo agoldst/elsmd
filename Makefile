@@ -21,6 +21,11 @@ xelatex := true
 NOTES := notes
 SCRIPTS := scripts
 
+# Set to anything non-empty to always use the "scuro" dark-on-light scheme
+# on slides. Comment this out to turn this off (you can still turn it on
+# in individual files with "scuro: true" in the YAML metadata)
+SCURO := true
+
 ## ---- special external files ----
 
 # Normally these do not need to be changed
@@ -86,15 +91,13 @@ $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 $(slides_notes_tex): slides/%.tex: $(NOTES)/%.md
 	mkdir -p slides
 	$(PANDOC) --template $(SLIDES_TMPL) \
-	    -V scuro=true \
-	    --slide-level 1 \
+	    $(if $(SCURO),-V scuro=true) --slide-level 1 \
 	    -o $@ $<
 
 $(slides_scripts_tex): slides/%.tex: $(SCRIPTS)/%.md
 	mkdir -p slides
 	$(PANDOC) --template $(SLIDES_TMPL) \
-	    -V scuro=true \
-	    --slide-level 2 \
+	    $(if $(SCURO),-V scuro=true) --slide-level 2 \
 	    -o $@ $<
 
 $(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
