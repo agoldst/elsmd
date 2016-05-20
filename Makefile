@@ -82,6 +82,7 @@ $(notes_tex): lectures/%.tex: $(NOTES)/%.md
 	$(PANDOC) --template $(SLIDES_TMPL) \
 	    -V beamer-notes=true \
 	    -V fontsize=10pt \
+	    -V scuro="" \
 	    -o $@ $<
 
 $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
@@ -89,6 +90,7 @@ $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 	$(PANDOC) --template $(SCRIPT_TMPL) \
 	    --slide-level 2 \
 	    -V fontsize=12pt \
+	    -V scuro="" \
 	    -o $@ $<
 
 $(slides_notes_tex): slides/%.tex: $(NOTES)/%.md
@@ -106,17 +108,19 @@ $(slides_scripts_tex): slides/%.tex: $(SCRIPTS)/%.md
 $(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
 	mkdir -p handouts
 	$(PANDOC) --template $(SLIDES_TMPL) \
+	    --slide-level 1 \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
-	    --slide-level 1 \
+	    -V scuro="" \
 	    -o $@ $<
 
 $(handouts_scripts_tex): handouts/%.tex: $(SCRIPTS)/%.md
 	mkdir -p handouts
 	$(PANDOC) --template $(SLIDES_TMPL) \
+	    --slide-level 2 \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
-	    --slide-level 2 \
+	    -V scuro="" \
 	    -o $@ $<
 
 phony_pdfs := $(if $(always_latexmk),$(pdfs) $(notes_pdf))
