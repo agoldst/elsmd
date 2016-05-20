@@ -26,6 +26,9 @@ SCRIPTS := scripts
 # in individual files with "scuro: true" in the YAML metadata)
 SCURO := true
 
+# Extra options to pandoc. Note that certain options set here are overridden.
+PANDOC_OPTIONS := 
+
 ## ---- special external files ----
 
 # Normally these do not need to be changed
@@ -46,7 +49,7 @@ temp_dir := tmp
 # Change these only to really change the behavior of the whole setup
 
 PANDOC := pandoc -t beamer $(if $(xelatex),--latex-engine xelatex) \
-    --filter $(OVERLAY_FILTER)
+    --filter $(OVERLAY_FILTER) $(PANDOC_OPTIONS)
 
 LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
     -pdf -dvi- -ps- $(if $(latex_quiet),-silent,-verbose) \
