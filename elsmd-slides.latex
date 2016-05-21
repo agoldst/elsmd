@@ -123,12 +123,14 @@ $if(lhs)$
 $endif$
 $if(highlighting-macros)$
 $highlighting-macros$
-$if(highlighting-options)$
 % tweak code highlighting environment used by pandoc
+$if(highlighting-options)$
 \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
+    commandchars=\\\{\},%
     $for(highlighting-options)$$highlighting-options$$sep$,$endfor$}
 $else$
-\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
+\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
+    commandchars=\\\{\},fontsize=\small}
 $endif$
 $endif$
 
@@ -140,7 +142,8 @@ $if(routput-options)$
     $for(routput-options)$$routput-options$$sep$,$endfor$}
 $else$
 \DefineVerbatimEnvironment{ROutput}{Verbatim}{%
-    formatcom=\color{darkgray},fontsize=\footnotesize}
+    formatcom=\color{$if(scuro)$light$else$dark$endif$gray},%
+    fontsize=\footnotesize}
 $endif$
 $endif$
 
