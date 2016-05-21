@@ -132,11 +132,26 @@ $if(lhs)$
 $endif$
 $if(highlighting-macros)$
 $highlighting-macros$
+$if(highlighting-options)$
 % tweak code highlighting environment
+\RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
+    $for(highlighting-options)$$highlighting-options$$sep$,$endfor$}
+$else$
 \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
-% new environment to be used with R markdown (a knitr hook must also be set)
-\DefineVerbatimEnvironment{ROutput}{Verbatim}{frame=single,fontsize=\footnotesize}
 $endif$
+$endif$
+$if(routput)$
+% new environment to be used with R markdown (a knitr hook must also be set)
+\usepackage{fancyvrb}
+$if(routput-options)$
+\DefineVerbatimEnvironment{ROutput}{Verbatim}{%
+    $for(routput-options)$$routput-options$$sep$,$endfor$}
+$else$
+\DefineVerbatimEnvironment{ROutput}{Verbatim}{%
+    formatcom=\color{darkgray},fontsize=\footnotesize}
+$endif$
+$endif$
+
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 \VerbatimFootnotes % allows verbatim text in footnotes
