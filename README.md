@@ -10,7 +10,7 @@ This setup is designed for two kinds of talking:
 
 In either case you may wish to distribute a handout with your slides to your listeners.
 
-For lectures from notes, create markdown files in the `notes` directory, on the model of [notes/notes-sample.md](notes/notes-sample.md). Using `make` then generates the following PDF files (links go to the results of `make` on this repository)
+For lectures from notes, create markdown files in the `notes` directory, on the model of [notes/notes-sample.md](notes/notes-sample.md). Using `make` then generates the following PDF files (links go to the results of `make` on this repository):
 
 1. `lectures/*.pdf`: slides and notes interleaved, two slides and two note-pages to a sheet, for the lecturer. Example: [lectures/notes-sample.pdf](http://andrewgoldstone.com/elsmd/lectures/notes-sample.pdf).
 1. `slides/*.pdf`: slides. Example: [slides/notes-sample.pdf](http://andrewgoldstone.com/elsmd/slides/notes-sample.pdf).
@@ -21,6 +21,8 @@ For lectures from scripts, create markdown files in the `scripts` directory, on 
 1. `lectures/*.pdf`: a talk script to read out (rather than script pages). Example: [lectures/script-sample.pdf](http://andrewgoldstone.com/elsmd/lectures/script-sample.pdf).
 1. `slides/*.pdf`: slides, as above. Example: [slides/script-sample.pdf](http://andrewgoldstone.com/elsmd/slides/script-sample.pdf).
 1. `handouts/*.pdf`: slide handout, as above. Example: [handouts/script-sample.pdf](http://andrewgoldstone.com/elsmd/handouts/script-sample.pdf).
+
+`make all` generates all possible PDFs from all markdown files in `notes` and `scripts`. If you have a file `notes/X.md` or `scripts/X.md`, `make X` (no extension) generates all three PDFs corresponding to `X`.
 
 I used to use Keynote as a presentation viewer (first converting PDFs using [PDF to Keynote](http://www.cs.hmc.edu/~oneill/freesoftware/pdftokeynote.html)). I don't like the presentation mode in the most recent Keynote, and I have switched to using [Présentation](http://iihm.imag.fr/blanch/software/osx-presentation/), a free program with an excellent presentation mode for PDFs, controllable from the keyboard.
 

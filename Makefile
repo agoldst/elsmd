@@ -125,7 +125,13 @@ $(handouts_scripts_tex): handouts/%.tex: $(SCRIPTS)/%.md
 
 phony_pdfs := $(if $(always_latexmk),$(pdfs) $(notes_pdf))
 
-.PHONY: $(phony_pdfs) all clean reallyclean
+# phony targets to make all three PDFS for a single source
+pdfsets := $(notdir $(basename $(notes_md) $(scripts_md)))
+
+$(pdfsets): %:lectures/%.pdf slides/%.pdf handouts/%.pdf
+
+.PHONY: $(phony_pdfs) $(pdfsets) all clean reallyclean
+
 $(pdfs): %.pdf: %.tex
 	rm -rf $(dir $@)$(temp_dir)
 	cd $(dir $<); $(LATEXMK) $(notdir $<)
