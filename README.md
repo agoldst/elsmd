@@ -51,6 +51,8 @@ A bit more detail on the source markdown can be found in the sample files: [note
 
 The PDFs are generated from two custom [pandoc templates](http://pandoc.org/README.html#templates), which are included here. [elsmd-slides.latex](elsmd-slides.latex) is the template for slides, notes, and handouts. [beamerarticle.latex](beamerarticle.latex) is the template for a lecture script. Both are based on pandoc's default Beamer template. My templates allow a few extra YAML metadata variables to be set in the source markdown:
 
+Note that slides from scripts set the pandoc slide level to 2 (second-level headers start a new slide). For slides from notes, this level is 1 by default but can be changed by changing the variable `NOTES_SLIDE_LEVEL` in the [Makefile](Makefile#L34).
+
 ## Typeface
 
 Set the typeface for the slides:
