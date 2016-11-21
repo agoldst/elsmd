@@ -66,7 +66,12 @@ $endif$
 \setbeamerfont{quote}{shape=\upshape}
 
 % eliminate silly beamer navigation line at bottom of slides
+% optionally replace with 3 / 25 little number
+$if(slide-numbers)$
+\setbeamertemplate{navigation symbols}{\insertpagenumber\ / \insertdocumentendpage}
+$else$
 \setbeamertemplate{navigation symbols}{}
+$endif$
 
 % ensure text jusfication
 \usepackage{ragged2e}
@@ -227,10 +232,17 @@ $if(dir)$
 \fi
 $endif$
 
+\usepackage{calc}
 $if(beamer-notes)$
+\newcounter{slidenum}
+\newcounter{slidetotal}
 \setbeameroption{show notes}
-\setbeamertemplate{note page}[plain]
-
+\setbeamertemplate{note page}{%
+    \setcounter{slidenum}{\insertpagenumber / 2}
+    \setcounter{slidetotal}{\insertdocumentendpage / 2}
+    \hspace*{\fill}\theslidenum\ / \theslidetotal%
+    \insertnote
+}
 % force notes page on each slide
 \makeatletter
 \def\beamer@framenotesbegin{%
@@ -241,6 +253,10 @@ $if(beamer-notes)$
 $endif$
 
 $if(beamer-handout)$
+$if(slide-numbers)$
+% blank out slide number on handout no matter what
+\setbeamertemplate{navigation symbols}{}
+$endif$
 \usepackage{pgfpages}
 \pgfpagesdeclarelayout{2 on 1 with blanks landscape}{
     \edef\pgfpageoptionheight{\the\paperheight}
