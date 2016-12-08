@@ -171,3 +171,6 @@ The rationale for doing this is explained in a blog post about an earlier versio
 
 I have set this up to meet my preference for dark slides with light text, which I call "scuro" (I use that name for an [R package](http://github.com/agoldst/scuro) with the same purpose for R markdown-based slides).  If that is not your preference, note that this color scheme is specified in [elsmd-slides.latex](elsmd-slides.latex#45) and then turned on by the Makefile when it sets `scuro=true` in the invocation of pandoc to generate slides.
 
+## Note on editing
+
+I use the [vim-pandoc](http://github.com/vim-pandoc/vim-pandoc) and [vim-pandoc-syntax](https://github.com/vim-pandoc/vim-pandoc-syntax) modules for editing markdown in Vim. However, the syntax highlighting has trouble with things like multiline `\note{}`s. A small kludge to the syntax highlighting is supplied here in [vim-pandoc-syntax/after/syntax/pandoc.vim](vim-pandoc-syntax/after/syntax/pandoc.vim), which will work if you adopt the convention of closing `\note{` with a `}` on its own line. The highlighting will then remind you that presentation notes are not markdown but raw TeX. (I should improve the pandoc filter script to permit writing notes in markdown, but that is for another day.)
