@@ -63,9 +63,7 @@ permission notice:
 """
 
 import re
-import sys
-import json
-import codecs
+from pandocfilters import toJSONFilter, Str
 
 ov_pat = re.compile(r'^(\\\w+)(\{<[^>]+>})(.*)$',flags=re.DOTALL)
 
@@ -78,40 +76,5 @@ def overlay_filter(key, value, fmt, meta):
             c += m.group(3)
             return { "t": "RawInline", "c": ["tex", c] }
 
-def walk(x, action, format, meta):
-    """Walk a tree, applying an action to every object.
-    Returns a modified tree.
-    """
-    if isinstance(x, list):
-        array = []
-        for item in x:
-            if isinstance(item, dict) and 't' in item:
-                res = action(item['t'], item['c'], format, meta)
-                if res is None:
-                    array.append(walk(item, action, format, meta))
-                elif isinstance(res, list):
-                    for z in res:
-                        array.append(walk(z, action, format, meta))
-                else:
-                    array.append(walk(res, action, format, meta))
-            else:
-                array.append(walk(item, action, format, meta))
-        return array
-    elif isinstance(x, dict):
-        obj = {}
-        for k in x:
-            obj[k] = walk(x[k], action, format, meta)
-        return obj
-    else:
-        return x
-
 if __name__ == "__main__":
-    input_stream = codecs.getreader("utf-8")(sys.stdin)
-    doc = json.loads(input_stream.read())
-    if len(sys.argv) > 1:
-        format = sys.argv[1]
-    else:
-        format = ""
-    altered = walk(doc, overlay_filter, format, doc[0]['unMeta'])
-    json.dump(altered, sys.stdout)
-
+    toJSONFilter(overlay_filter)
