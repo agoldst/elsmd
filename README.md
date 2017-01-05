@@ -30,7 +30,7 @@ I used to use Keynote as a presentation viewer (first converting PDFs using [PDF
 
 You could simply clone or download this repository for each family of talks (e.g. a course of lectures). If you'd rather not proliferate copies of everything here, then you can instead 
 
-1. Place [overlay_filter](overlay_filter) in your `PATH`.
+1. Place [overlay_filter](overlay_filter) in your `PATH` or another place pandoc looks for filters (by default, `$HOME/.pandoc/filters`)
 2. Place [elsmd-slides.latex](elsmd-slides.latex) and [beamerarticle.latex](beamerarticle.latex) where pandoc looks for templates (by default, `$HOME/.pandoc/templates`).
 3. Copy over the [Makefile](Makefile) and create a folder `notes` or `scripts` or both to put your markdown in.
 

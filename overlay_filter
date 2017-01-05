@@ -22,8 +22,11 @@ them; write onlyenv as normal, for example.
 
 The code for walking the tree in 'walk' and the main block is taken from
 the pandocfilters python module, https://github.com/jgm/pandocfilters,
-(C) 2013 John MacFarlane. (This way we do not require the user's
-system's python to have pandocfilters installed.)
+(C) 2013 John MacFarlane. This way we do not require the user's system's
+python to have pandocfilters installed, though, of course, I have to
+remember to keep up with changes in pandoc's JSON API. The present
+script should be compatible with pandoc versions on both sides of the
+pandoc 1.18 JSON format change (AG scripsit, December 2016).
 
 This file incorporates work covered by the following copyright and
 permission notice:
@@ -78,7 +81,7 @@ def overlay_filter(key, value, fmt, meta):
             c += m.group(3)
             return { "t": "RawInline", "c": ["tex", c] }
 
-def walk(x, action, format, meta):
+def walk(x, action, fmt, meta):
     """Walk a tree, applying an action to every object.
     Returns a modified tree.
     """
@@ -86,32 +89,50 @@ def walk(x, action, format, meta):
         array = []
         for item in x:
             if isinstance(item, dict) and 't' in item:
-                res = action(item['t'], item['c'], format, meta)
+                res = action(item['t'],
+                        item['c'] if 'c' in item else None, fmt, meta)
                 if res is None:
-                    array.append(walk(item, action, format, meta))
+                    array.append(walk(item, action, fmt, meta))
                 elif isinstance(res, list):
                     for z in res:
-                        array.append(walk(z, action, format, meta))
+                        array.append(walk(z, action, fmt, meta))
                 else:
-                    array.append(walk(res, action, format, meta))
+                    array.append(walk(res, action, fmt, meta))
             else:
-                array.append(walk(item, action, format, meta))
+                array.append(walk(item, action, fmt, meta))
         return array
     elif isinstance(x, dict):
         obj = {}
         for k in x:
-            obj[k] = walk(x[k], action, format, meta)
+            obj[k] = walk(x[k], action, fmt, meta)
         return obj
     else:
         return x
 
 if __name__ == "__main__":
-    input_stream = codecs.getreader("utf-8")(sys.stdin)
+    # 2vs3: python is teh best
+    try:
+        import io
+        input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+    except AttributeError:
+        # Python 2 does not have sys.stdin.buffer.
+        # REF: https://stackoverflow.com/questions/2467928/python-unicodeencode
+        input_stream = codecs.getreader("utf-8")(sys.stdin)
+
     doc = json.loads(input_stream.read())
-    if len(sys.argv) > 1:
-        format = sys.argv[1]
+    # pandoc 1.18 changed the format
+    if 'meta' in doc:
+        meta = doc['meta']
+    elif doc[0]:  # old API
+        meta = doc[0]['unMeta']
     else:
-        format = ""
-    altered = walk(doc, overlay_filter, format, doc[0]['unMeta'])
+        meta = {}
+
+    if len(sys.argv) > 1:
+        fmt = sys.argv[1]
+    else:
+        fmt = ""
+
+    altered = walk(doc, overlay_filter, fmt, meta)
     json.dump(altered, sys.stdout)
 
