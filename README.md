@@ -73,7 +73,7 @@ The `mainfont` is only used for lecture scripts. If you omit this, you'll get  C
 
 ## Bibliography
 
-For generating citations, I use `biblatex-chicago`. Set this up with
+For generating citations, I use `biblatex-chicago`. (I find that pandoc-citeproc is not adequate to citation in the humanities.) Set this up with
 
 ```yaml
 biblatex: true
@@ -82,7 +82,13 @@ biblatexoptions: [notes, noibid]
 bibliography: ../sources.bib
 ```
 
-You can then cite using either pandoc-style `[@citekey]` or LaTeX `\cite{citekey}`. (pandoc-citeproc is not adequate to citation in the humanities.)
+and cite using LaTeX `\cite{citekey}` commands rather than pandoc-style `[@citekey]` commands. I do not normally include slides with bibliographic listings, but these are generated (as many slides as are needed) if you set the `biblio-title` metadata variable:
+
+```yaml
+biblio-title: Bibliography
+```
+
+Other biblatex styles should work fine (omit the `biblatex-chicago: true` and use pandoc's usual variables). If you really want to use pandoc-style `[@citekey]`s, it is possible but requires additional tweaking. Staying within biblatex, you'd adjust the Makefile's `PANDOC_OPTIONS` variable to `--biblatex -H preamble.tex` and create a `preamble.tex` file with the line `\DeclareAutociteCommand{footnote}{\cite}{\cites}` or similar (unless you want footnotes on slides). Or if you insist on pandoc-citeproc then set `PANDOC_OPTIONS := --filter pandoc-citeproc` instead.
 
 ## Lecturing from notes: adding notes
 
