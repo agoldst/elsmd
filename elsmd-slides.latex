@@ -119,6 +119,8 @@ $endif$
 $if(bibliography)$
 \bibliography{$bibliography$}
 $endif$
+\setbeamertemplate{bibliography item}{}
+\setbeamertemplate{frametitle continuation}[from second]
 $endif$
 $if(listings)$
 \usepackage{listings}
@@ -349,4 +351,10 @@ $for(include-after)$
 $include-after$
 
 $endfor$
+
+$if(biblio-title)$
+\begin{frame}[t,allowframebreaks]{$biblio-title$}
+    \printbibliography[heading=none]
+\end{frame}
+$endif$
 \end{document}
