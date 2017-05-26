@@ -143,7 +143,7 @@ Shown three times.
 \end{frame}
 ```
 
-In this setup, you write `{<...>}` for `<...>`:
+In the elsmd setup, you write `{<...>}` for `<...>`:
 
 ```markdown
 Shown three times.
