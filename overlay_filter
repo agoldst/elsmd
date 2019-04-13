@@ -80,6 +80,13 @@ def overlay_filter(key, value, fmt, meta):
             c += re.sub(r'^\{|}$', "", m.group(2))
             c += m.group(3)
             return { "t": "RawInline", "c": ["tex", c] }
+    elif key == 'RawBlock' and (value[0] == 'tex' or value[0] == 'latex'):
+        m = ov_pat.match(value[1])
+        if m:
+            c = m.group(1)
+            c += re.sub(r'^\{|}$', "", m.group(2))
+            c += m.group(3)
+            return { "t": "RawBlock", "c": ["latex", c] }
 
 def walk(x, action, fmt, meta):
     """Walk a tree, applying an action to every object.
