@@ -37,8 +37,10 @@ NOTES_SLIDE_LEVEL := 1
 
 # Normally these do not need to be changed
 
-# works if overlay_filter python script is local or in PATH
-OVERLAY_FILTER := overlay_filter
+# filter used to generate script
+NOSLIDE := noslide.lua
+# works if lua script is local or ~/.pandoc/filters
+NOSLIDE_FILTER := --lua-filter=$(NOSLIDE)
 
 # these work if the two templates are local or in ~/.pandoc/templates
 SLIDES_TMPL := elsmd-slides.latex
@@ -55,8 +57,7 @@ temp_dir := tmp
 # pandoc 2 changes the latex-option name to pdf-engine, so:
 pandoc2 := `pandoc -v | head -1 | grep '^pandoc 2'`
 pandoc_xelatex := $(if $(xelatex),$(if $(pandoc2),--pdf-engine,--latex-engine) xelatex)
-PANDOC := pandoc -t beamer $(pandoc_xelatex) \
-    --filter $(OVERLAY_FILTER) $(PANDOC_OPTIONS)
+PANDOC := pandoc $(pandoc_xelatex) $(PANDOC_OPTIONS)
 
 LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
     -pdf -dvi- -ps- $(if $(latex_quiet),-silent,-verbose) \
@@ -86,7 +87,7 @@ pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf) \
 
 $(notes_tex): lectures/%.tex: $(NOTES)/%.md
 	mkdir -p lectures
-	$(PANDOC) --template $(SLIDES_TMPL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    --slide-level $(NOTES_SLIDE_LEVEL) \
 	    -V beamer-notes=true \
 	    -V fontsize=10pt \
@@ -95,8 +96,7 @@ $(notes_tex): lectures/%.tex: $(NOTES)/%.md
 
 $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 	mkdir -p lectures
-	$(PANDOC) --template $(SCRIPT_TMPL) \
-	    --slide-level 2 \
+	$(PANDOC) -t latex --template $(SCRIPT_TMPL) \
 	    -V fontsize=12pt \
 	    -V scuro="" \
 	    -V section-titles="" \
@@ -104,20 +104,21 @@ $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 
 $(slides_notes_tex): slides/%.tex: $(NOTES)/%.md
 	mkdir -p slides
-	$(PANDOC) --template $(SLIDES_TMPL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    $(if $(SCURO),-V scuro=true) --slide-level=$(NOTES_SLIDE_LEVEL) \
 	    -o $@ $<
 
 $(slides_scripts_tex): slides/%.tex: $(SCRIPTS)/%.md
 	mkdir -p slides
-	$(PANDOC) --template $(SLIDES_TMPL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
+	    $(NOSLIDE_FILTER) \
 	    $(if $(SCURO),-V scuro=true) --slide-level 2 \
 	    -V section-titles="" \
 	    -o $@ $<
 
 $(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
 	mkdir -p handouts
-	$(PANDOC) --template $(SLIDES_TMPL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    --slide-level $(NOTES_SLIDE_LEVEL) \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
@@ -126,7 +127,8 @@ $(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
 
 $(handouts_scripts_tex): handouts/%.tex: $(SCRIPTS)/%.md
 	mkdir -p handouts
-	$(PANDOC) --template $(SLIDES_TMPL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
+	    $(NOSLIDE_FILTER) \
 	    --slide-level 2 \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
