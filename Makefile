@@ -97,6 +97,7 @@ $(notes_tex): lectures/%.tex: $(NOTES)/%.md
 $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 	mkdir -p lectures
 	$(PANDOC) -t latex --template $(SCRIPT_TMPL) \
+	    $(NOSLIDE_FILTER) \
 	    -V fontsize=12pt \
 	    -V scuro="" \
 	    -V section-titles="" \
