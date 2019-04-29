@@ -29,10 +29,6 @@ SCURO := true
 # Extra options to pandoc. Note that certain options set here are overridden.
 PANDOC_OPTIONS := 
 
-# pandoc slide level, for slides from notes only (generation from script
-# requires slide level be set to 2).
-NOTES_SLIDE_LEVEL := 1
-
 ## ---- special external files ----
 
 # Normally these do not need to be changed
@@ -88,7 +84,6 @@ pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf) \
 $(notes_tex): lectures/%.tex: $(NOTES)/%.md
 	mkdir -p lectures
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
-	    --slide-level $(NOTES_SLIDE_LEVEL) \
 	    -V beamer-notes=true \
 	    -V fontsize=10pt \
 	    -V scuro="" \
@@ -106,21 +101,20 @@ $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 $(slides_notes_tex): slides/%.tex: $(NOTES)/%.md
 	mkdir -p slides
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
-	    $(if $(SCURO),-V scuro=true) --slide-level=$(NOTES_SLIDE_LEVEL) \
+	    $(if $(SCURO),-V scuro=true) \
 	    -o $@ $<
 
 $(slides_scripts_tex): slides/%.tex: $(SCRIPTS)/%.md
 	mkdir -p slides
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    $(NOSLIDE_FILTER) \
-	    $(if $(SCURO),-V scuro=true) --slide-level 2 \
+	    $(if $(SCURO),-V scuro=true) \
 	    -V section-titles="" \
 	    -o $@ $<
 
 $(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
 	mkdir -p handouts
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
-	    --slide-level $(NOTES_SLIDE_LEVEL) \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    -V scuro="" \
@@ -130,7 +124,6 @@ $(handouts_scripts_tex): handouts/%.tex: $(SCRIPTS)/%.md
 	mkdir -p handouts
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    $(NOSLIDE_FILTER) \
-	    --slide-level 2 \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    -V scuro="" \
