@@ -4,13 +4,13 @@ A filter to process Divs with class `noslide`. If the output format
 is `beamer`, these will be removed. Otherwise, they will be kept but
 surrounded by a "delineator" block on both sides. This delineator is
 empty by default, but can be controlled with the metadata variable
-`noslide`. The filter understands the following special values:
+`noslide`, which should be an inline string. The filter understands the following special values:
 
 none: nothing (default)
 hr: a horizontal rule
 br: a blank line
 
-Any other non-empty string is passed through as a raw LaTeX block.
+Any other non-empty inline string is passed through as a raw LaTeX block; any other type of value is ignored.
 
 --]]
 
@@ -18,7 +18,7 @@ local DEFAULT_DELINEATOR = pandoc.Null
 local d = DEFAULT_DELINEATOR
 
 function get_dcode (m)
-    local dcode = m.noslide
+    local dcode = m.noslide[1].text
     if dcode == "hr" then
         d = pandoc.HorizontalRule
     elseif dcode == "br" then
