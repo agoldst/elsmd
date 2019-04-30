@@ -6,9 +6,14 @@ the Divs will be kept and surrounded by horizontal rules. A final
 processing step removes duplicate horizontal rules introduced by this
 transformation, because of my obsessive compulsion.
 
-If hide_noslide is not set, then the default behavior is to remove noslide Divs if the output format is beamer and to retain them otherwise.
+If hide_noslide is not set, then the default behavior is to remove
+noslide Divs if the output format is beamer and to retain them
+otherwise.
 
-This leads to a special behavior if Divs are retained AND the output format is a slideshow format (including beamer). In that case, the horizontal rules are reinterpreted by pandoc as slide delimiters. For the purposes of this setup, this is actually desirable behavior.
+This leads to a special behavior if Divs are retained AND the output
+format is a slideshow format (including beamer). In that case, the
+horizontal rules are reinterpreted by pandoc as slide delimiters. For
+the purposes of this setup, this is actually desirable behavior.
 
 --]]
 
