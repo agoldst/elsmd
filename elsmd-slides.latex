@@ -68,7 +68,7 @@ $endif$
 % eliminate silly beamer navigation line at bottom of slides
 % optionally replace with 3 / 25 little number
 $if(slide-numbers)$
-\setbeamertemplate{navigation symbols}{\rule{0pt}{2\baselineskip}\insertpagenumber\ / \insertdocumentendpage\par\par}
+\setbeamertemplate{navigation symbols}{\insertpagenumber\ / \insertdocumentendpage}
 $else$
 \setbeamertemplate{navigation symbols}{}
 $endif$
