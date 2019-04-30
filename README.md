@@ -124,6 +124,14 @@ biblio-title: Bibliography
 
 Other biblatex styles should work fine (omit the `biblatex-chicago: true` and use pandoc's usual variables). If you really want to use pandoc-style `[@citekey]`s, it is possible but requires additional tweaking. Staying within biblatex, you'd adjust the Makefile's `PANDOC_OPTIONS` variable to `--biblatex -H preamble.tex` and create a `preamble.tex` file with the line `\DeclareAutociteCommand{footnote}{\cite}{\cites}` or similar (unless you want footnotes on slides). Or if you insist on pandoc-citeproc then set `PANDOC_OPTIONS := --filter pandoc-citeproc` instead.
 
+## Slide numbering
+
+To display a slide count on each slide, use
+
+```yaml
+slide-numbers: true
+```
+
 ## Laying a slide out on a grid
 
 There are two options for more elaborate slide layouts than markdown allows you to express. You can use the beamer `columns` environment, just like any other LaTeX within markdown. The templates used here also set up a 9x8 `textpos` grid. See [notes-sample.md](notes/notes-sample.md) and [script-sample.md](scripts/script-sample.md) for details on how to use this grid.
