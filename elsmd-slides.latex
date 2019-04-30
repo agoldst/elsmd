@@ -66,9 +66,17 @@ $endif$
 \setbeamerfont{quote}{shape=\upshape}
 
 % eliminate silly beamer navigation line at bottom of slides
-% optionally replace with 3 / 25 little number
+% or optionally replace with 3 / 25 little number
 $if(slide-numbers)$
+$if(beamer-notes)$
+% for the speaker-notes version of the slide, we need a kludge to get the right number to appear
+\setbeamertemplate{navigation symbols}{%
+    \setcounter{slidenum}{\insertpagenumber / 2 + 1}
+    \setcounter{slidetotal}{\insertdocumentendpage / 2}
+    \theslidenum\ / \theslidetotal}
+$else$
 \setbeamertemplate{navigation symbols}{\insertpagenumber\ / \insertdocumentendpage}
+$endif$
 $else$
 \setbeamertemplate{navigation symbols}{}
 $endif$
@@ -239,12 +247,15 @@ $if(beamer-notes)$
 \newcounter{slidenum}
 \newcounter{slidetotal}
 \setbeameroption{show notes}
+% include slide number on beamer note page BUT we have to deal with the fact that all the page counters are thrown off by the addition of notes pages
 \setbeamertemplate{note page}{%
     \setcounter{slidenum}{\insertpagenumber / 2}
     \setcounter{slidetotal}{\insertdocumentendpage / 2}
-    \hspace*{\fill}\theslidenum\ / \theslidetotal%
+    \strut\hspace*{\fill}\theslidenum\ / \theslidetotal%
+    \par%
     \insertnote
 }
+
 % force notes page on each slide
 \makeatletter
 \def\beamer@framenotesbegin{%

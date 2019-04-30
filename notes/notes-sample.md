@@ -26,31 +26,31 @@ Here are my notes.
 - With a
 - list.
 
-\note{
+::: notes
 
 A note on my list.
 
-}
+:::
 
 # A slide to show overlay tricks
 
-\only{<1,3>}{This text appears on the first and third versions of the slide, but not the second.}
+\only<1,3>{This text appears on the first and third versions of the slide, but not the second.}
 
-This uses beamer's highlighting command to \alert{<2>}{draw attention here}, but only on the second slide.
+This uses beamer's highlighting command to \alert<2>{draw attention here}, but only on the second slide.
 
-\note{<1>}{
+\note<1>{
 
 Notes can also have overlay specs. First slide version note.
 
 }
 
-\note{<2>}{
+\note<2>{
 
 Second.
 
 }
 
-\note{<3>}{
+\note<3>{
 
 And third. Use \LaTeX\ macros in notes, like \emph{emphasis}.
 
@@ -74,7 +74,7 @@ Grid demo LL
 \only<2>{Grid demo LR}
 \end{textblock}
 
-\note{<2>}{
+\note<2>{
 
 To get overlay effects with materials placed using \texttt{textpos}, you have to specify the overlay within the \texttt{textblock} environment.
 

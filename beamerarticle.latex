@@ -65,7 +65,6 @@ $endif$
 \addtobeamertemplate{block begin}{}{\justifying}
 
 \setbeamertemplate{frame begin}{\par\noindent\rule{\textwidth}{0.25pt}\par}
-\setbeamertemplate{frame end}{\par\noindent\rule{\textwidth}{0.25pt}\par}
 
 % prevent figures on slides from floating away in the script
 \usepackage{float}

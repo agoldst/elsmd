@@ -29,24 +29,33 @@ SCURO := true
 # Extra options to pandoc. Note that certain options set here are overridden.
 PANDOC_OPTIONS := 
 
-# pandoc slide level, for slides from notes only (generation from script
-# requires slide level be set to 2).
-NOTES_SLIDE_LEVEL := 1
-
 ## ---- special external files ----
 
 # Normally these do not need to be changed
 
-# works if overlay_filter python script is local or in PATH
-OVERLAY_FILTER := overlay_filter
+# filter used to generate lecture script
+# this specification works if lua script is local or ~/.pandoc/filters
+NOSLIDE := noslide.lua
 
 # these work if the two templates are local or in ~/.pandoc/templates
 SLIDES_TMPL := elsmd-slides.latex
 SCRIPT_TMPL := beamerarticle.latex
 
+# used for `make install`
+
+TMPL_DIR := $(HOME)/.pandoc/templates
+FILTER_DIR := $(HOME)/.pandoc/filters
+
 # temp file subdirectory (created in lectures, slides, handouts)
 # change this if you're using */tmp for something else
 temp_dir := tmp
+
+## ---- install ----
+
+# copy templates and filter script to pandoc's default locations for these
+install:
+	cp -f $(SLIDES_TMPL) $(SCRIPT_TMPL) $(TMPL_DIR)
+	cp -f $(NOSLIDE) $(FILTER_DIR)
 
 ## ---- commands ----
 
@@ -55,13 +64,13 @@ temp_dir := tmp
 # pandoc 2 changes the latex-option name to pdf-engine, so:
 pandoc2 := `pandoc -v | head -1 | grep '^pandoc 2'`
 pandoc_xelatex := $(if $(xelatex),$(if $(pandoc2),--pdf-engine,--latex-engine) xelatex)
-PANDOC := pandoc -t beamer $(pandoc_xelatex) \
-    --filter $(OVERLAY_FILTER) $(PANDOC_OPTIONS)
+PANDOC := pandoc $(pandoc_xelatex) $(PANDOC_OPTIONS)
 
 LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
     -pdf -dvi- -ps- $(if $(latex_quiet),-silent,-verbose) \
     -outdir=$(temp_dir)
 
+NOSLIDE_FILTER := --lua-filter=$(NOSLIDE)
 
 ## ---- build rules ----
 
@@ -86,8 +95,7 @@ pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf) \
 
 $(notes_tex): lectures/%.tex: $(NOTES)/%.md
 	mkdir -p lectures
-	$(PANDOC) --template $(SLIDES_TMPL) \
-	    --slide-level $(NOTES_SLIDE_LEVEL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    -V beamer-notes=true \
 	    -V fontsize=10pt \
 	    -V scuro="" \
@@ -95,8 +103,9 @@ $(notes_tex): lectures/%.tex: $(NOTES)/%.md
 
 $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 	mkdir -p lectures
-	$(PANDOC) --template $(SCRIPT_TMPL) \
-	    --slide-level 2 \
+	$(PANDOC) -t beamer --template $(SCRIPT_TMPL) \
+	    $(NOSLIDE_FILTER) \
+	    -M hide_noslide=false \
 	    -V fontsize=12pt \
 	    -V scuro="" \
 	    -V section-titles="" \
@@ -104,21 +113,21 @@ $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 
 $(slides_notes_tex): slides/%.tex: $(NOTES)/%.md
 	mkdir -p slides
-	$(PANDOC) --template $(SLIDES_TMPL) \
-	    $(if $(SCURO),-V scuro=true) --slide-level=$(NOTES_SLIDE_LEVEL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
+	    $(if $(SCURO),-V scuro=true) \
 	    -o $@ $<
 
 $(slides_scripts_tex): slides/%.tex: $(SCRIPTS)/%.md
 	mkdir -p slides
-	$(PANDOC) --template $(SLIDES_TMPL) \
-	    $(if $(SCURO),-V scuro=true) --slide-level 2 \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
+	    $(NOSLIDE_FILTER) \
+	    $(if $(SCURO),-V scuro=true) \
 	    -V section-titles="" \
 	    -o $@ $<
 
 $(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
 	mkdir -p handouts
-	$(PANDOC) --template $(SLIDES_TMPL) \
-	    --slide-level $(NOTES_SLIDE_LEVEL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    -V scuro="" \
@@ -126,8 +135,8 @@ $(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
 
 $(handouts_scripts_tex): handouts/%.tex: $(SCRIPTS)/%.md
 	mkdir -p handouts
-	$(PANDOC) --template $(SLIDES_TMPL) \
-	    --slide-level 2 \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
+	    $(NOSLIDE_FILTER) \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    -V scuro="" \
@@ -141,7 +150,7 @@ pdfsets := $(notdir $(basename $(notes_md) $(scripts_md)))
 
 $(pdfsets): %:lectures/%.pdf slides/%.pdf handouts/%.pdf
 
-.PHONY: $(phony_pdfs) $(pdfsets) all clean reallyclean
+.PHONY: $(phony_pdfs) $(pdfsets) all clean reallyclean install
 
 $(pdfs): %.pdf: %.tex
 	rm -rf $(dir $@)$(temp_dir)
@@ -169,3 +178,4 @@ reallyclean: clean
 	rm -f $(pdfs) $(notes_pdf)
 
 .DEFAULT_GOAL := all
+
