@@ -61,7 +61,7 @@ For lectures from scripts, create markdown files in the `scripts` directory, on 
 1. `slides/*.pdf`: slides, as above. Example: [slides/script-sample.pdf](http://andrewgoldstone.com/elsmd/slides/script-sample.pdf).
 1. `handouts/*.pdf`: slide handout, as above. Example: [handouts/script-sample.pdf](http://andrewgoldstone.com/elsmd/handouts/script-sample.pdf).
 
-Paragraphs of script to appear only on speaker's version should go inside the special pandoc Div with class `noslide`
+Paragraphs of script to appear only on the speaker's version should go inside the special pandoc Div with class `noslide`
 
 ```markdown
 ::: noslide
@@ -69,7 +69,7 @@ Here is my script.
 :::
 ```
 
-The [noslide.lua](noslide.lua) filter removes this text from the slideshow and handout outputs. 
+The [noslide.lua](noslide.lua) filter removes this text from the slideshow and handout outputs; in the script output, these Divs are retained. 
 
 ### Everything at once
 
@@ -83,9 +83,9 @@ I used to use Keynote as a presentation viewer (first converting PDFs using [PDF
 
 # More detail on the source markdown
 
-The PDFs are generated from two custom [pandoc templates](http://pandoc.org/README.html#templates), which are included here. [elsmd-slides.latex](elsmd-slides.latex) is the template for slides, notes, and handouts. [beamerarticle.latex](beamerarticle.latex) is the template for a lecture script. Both are based on pandoc's default Beamer template. My templates allow a few extra YAML metadata variables to be set in the source markdown:
+The PDFs are generated from two custom [pandoc templates](http://pandoc.org/README.html#templates), which are included here. [elsmd-slides.latex](elsmd-slides.latex) is the template for slides, notes, and handouts. [beamerarticle.latex](beamerarticle.latex) is the template for a lecture script. Both are based on pandoc's default Beamer template, but the latter takes advantage of the beamerarticle LaTeX package (included with Beamer) to convert Beamer slideshow code into an ordinary document with continuous text.
 
-Note that slides from scripts set the pandoc slide level to 2 (second-level headers start a new slide). For slides from notes, this level is 1 by default but can be changed by changing the variable `NOTES_SLIDE_LEVEL` in the [Makefile](Makefile#L34).
+My templates allow a few extra YAML metadata variables to be set in the source markdown.
 
 ## Typeface
 
