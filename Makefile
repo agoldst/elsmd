@@ -33,18 +33,29 @@ PANDOC_OPTIONS :=
 
 # Normally these do not need to be changed
 
-# filter used to generate script
+# filter used to generate lecture script
+# this specification works if lua script is local or ~/.pandoc/filters
 NOSLIDE := noslide.lua
-# works if lua script is local or ~/.pandoc/filters
-NOSLIDE_FILTER := --lua-filter=$(NOSLIDE)
 
 # these work if the two templates are local or in ~/.pandoc/templates
 SLIDES_TMPL := elsmd-slides.latex
 SCRIPT_TMPL := beamerarticle.latex
 
+# used for `make install`
+
+TMPL_DIR := $(HOME)/.pandoc/templates
+FILTER_DIR := $(HOME)/.pandoc/filters
+
 # temp file subdirectory (created in lectures, slides, handouts)
 # change this if you're using */tmp for something else
 temp_dir := tmp
+
+## ---- install ----
+
+# copy templates and filter script to pandoc's default locations for these
+install:
+	cp -f $(SLIDES_TMPL) $(SCRIPT_TMPL) $(TMPL_DIR)
+	cp -f $(NOSLIDE) $(FILTER_DIR)
 
 ## ---- commands ----
 
@@ -59,6 +70,7 @@ LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
     -pdf -dvi- -ps- $(if $(latex_quiet),-silent,-verbose) \
     -outdir=$(temp_dir)
 
+NOSLIDE_FILTER := --lua-filter=$(NOSLIDE)
 
 ## ---- build rules ----
 
@@ -138,7 +150,7 @@ pdfsets := $(notdir $(basename $(notes_md) $(scripts_md)))
 
 $(pdfsets): %:lectures/%.pdf slides/%.pdf handouts/%.pdf
 
-.PHONY: $(phony_pdfs) $(pdfsets) all clean reallyclean
+.PHONY: $(phony_pdfs) $(pdfsets) all clean reallyclean install
 
 $(pdfs): %.pdf: %.tex
 	rm -rf $(dir $@)$(temp_dir)
@@ -166,3 +178,4 @@ reallyclean: clean
 	rm -f $(pdfs) $(notes_pdf)
 
 .DEFAULT_GOAL := all
+
