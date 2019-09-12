@@ -59,6 +59,9 @@ $if(scuro)$
 % \setbeamertemplate{caption}[numbered]
 % \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
+
+% color URLs with highlight color
+\hypersetup{colorlinks=true, urlcolor=structure}
 $endif$
 
 % use system fonts. The sans font will be used
