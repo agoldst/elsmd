@@ -52,12 +52,12 @@ Etc.
 To add notes with a beamer overlay, decorate the Div as follows:
 
 ```markdown
-::: note <2>
+::: note<2>
 This note will only be associated with the *second* stage of a frame.
 :::
 ```
 
-You can also use beamer's `\note` command; inside `\note{...}`, use LaTeX, not markdown. 
+This is translated to `\note<2>{This note...}` by pandoc. You can also use beamer's `\note` command; inside `\note{...}`, use LaTeX, not markdown. 
 
 Handouts use the Beamer class option `handout`, which collapses incremental slides into one to save paper and (possibly) confusion.
 
