@@ -21,6 +21,9 @@ xelatex := true
 NOTES := notes
 SCRIPTS := scripts
 
+# default metadata added to all slides and handouts; leave empty to remove
+SLIDE_YAML := slide-meta.yaml
+
 # Set to anything non-empty to always use the "scuro" dark-on-light scheme
 # on slides. Comment this out to turn this off (you can still turn it on
 # in individual files with "scuro: true" in the YAML metadata)
@@ -35,7 +38,10 @@ PANDOC_OPTIONS :=
 
 # filter used to generate lecture script
 # this specification works if lua script is local or ~/.pandoc/filters
-NOSLIDE := noslide.lua
+NOSLIDE_LUA := noslide.lua
+
+# filter used to process speaker notes with beamer overlays
+NOTES_LUA := notes.lua
 
 # these work if the two templates are local or in ~/.pandoc/templates
 SLIDES_TMPL := elsmd-slides.latex
@@ -55,7 +61,7 @@ temp_dir := tmp
 # copy templates and filter script to pandoc's default locations for these
 install:
 	cp -f $(SLIDES_TMPL) $(SCRIPT_TMPL) $(TMPL_DIR)
-	cp -f $(NOSLIDE) $(FILTER_DIR)
+	cp -f $(NOSLIDE_LUA) $(NOTES_LUA) $(FILTER_DIR)
 
 ## ---- commands ----
 
@@ -64,13 +70,13 @@ install:
 # pandoc 2 changes the latex-option name to pdf-engine, so:
 pandoc2 := `pandoc -v | head -1 | grep '^pandoc 2'`
 pandoc_xelatex := $(if $(xelatex),$(if $(pandoc2),--pdf-engine,--latex-engine) xelatex)
-PANDOC := pandoc $(pandoc_xelatex) $(PANDOC_OPTIONS)
+PANDOC := pandoc $(pandoc_xelatex) $(PANDOC_OPTIONS) --lua-filter=$(NOTES_LUA)
 
 LATEXMK := latexmk $(if $(xelatex),-xelatex,-pdflatex="pdflatex %O %S") \
     -pdf -dvi- -ps- $(if $(latex_quiet),-silent,-verbose) \
     -outdir=$(temp_dir)
 
-NOSLIDE_FILTER := --lua-filter=$(NOSLIDE)
+NOSLIDE_FILTER := --lua-filter=$(NOSLIDE_LUA)
 
 ## ---- build rules ----
 
@@ -93,15 +99,15 @@ handouts_scripts_pdf := $(patsubst %.tex,%.pdf,$(handouts_scripts_tex))
 pdfs := $(scripts_pdf) $(slides_pdf) $(handouts_notes_pdf) \
     $(handouts_scripts_pdf)
 
-$(notes_tex): lectures/%.tex: $(NOTES)/%.md
+$(notes_tex): lectures/%.tex: $(SLIDE_YAML) $(NOTES)/%.md
 	mkdir -p lectures
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    -V beamer-notes=true \
 	    -V fontsize=10pt \
 	    -V scuro="" \
-	    -o $@ $<
+	    -o $@ $^
 
-$(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
+$(scripts_tex): lectures/%.tex: $(SLIDE_YAML) $(SCRIPTS)/%.md
 	mkdir -p lectures
 	$(PANDOC) -t beamer --template $(SCRIPT_TMPL) \
 	    $(NOSLIDE_FILTER) \
@@ -109,31 +115,31 @@ $(scripts_tex): lectures/%.tex: $(SCRIPTS)/%.md
 	    -V fontsize=12pt \
 	    -V scuro="" \
 	    -V section-titles="" \
-	    -o $@ $<
+	    -o $@ $^
 
-$(slides_notes_tex): slides/%.tex: $(NOTES)/%.md
+$(slides_notes_tex): slides/%.tex: $(SLIDE_YAML) $(NOTES)/%.md
 	mkdir -p slides
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    $(if $(SCURO),-V scuro=true) \
-	    -o $@ $<
+	    -o $@ $^
 
-$(slides_scripts_tex): slides/%.tex: $(SCRIPTS)/%.md
+$(slides_scripts_tex): slides/%.tex: $(SLIDE_YAML) $(SCRIPTS)/%.md
 	mkdir -p slides
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    $(NOSLIDE_FILTER) \
 	    $(if $(SCURO),-V scuro=true) \
 	    -V section-titles="" \
-	    -o $@ $<
+	    -o $@ $^
 
-$(handouts_notes_tex): handouts/%.tex: $(NOTES)/%.md
+$(handouts_notes_tex): handouts/%.tex: $(SLIDE_YAML) $(NOTES)/%.md
 	mkdir -p handouts
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    -V beamer-handout=true \
 	    -V classoption=handout \
 	    -V scuro="" \
-	    -o $@ $<
+	    -o $@ $^
 
-$(handouts_scripts_tex): handouts/%.tex: $(SCRIPTS)/%.md
+$(handouts_scripts_tex): handouts/%.tex: $(SLIDE_YAML) $(SCRIPTS)/%.md
 	mkdir -p handouts
 	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    $(NOSLIDE_FILTER) \
@@ -141,7 +147,7 @@ $(handouts_scripts_tex): handouts/%.tex: $(SCRIPTS)/%.md
 	    -V classoption=handout \
 	    -V scuro="" \
 	    -V section-titles="" \
-	    -o $@ $<
+	    -o $@ $^
 
 phony_pdfs := $(if $(always_latexmk),$(pdfs) $(notes_pdf))
 

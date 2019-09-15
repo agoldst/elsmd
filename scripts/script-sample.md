@@ -7,7 +7,6 @@ date: May 1, 1894
 mainfont: Hoefler Text
 mainfontoptions:
  - Numbers=OldStyle
-sansfont: Gill Sans
 biblatex: true
 biblatex-chicago: true
 biblatexoptions: [notes, noibid]

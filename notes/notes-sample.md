@@ -1,10 +1,7 @@
 ---
 title: A Sample Set of Slides
-author: Your Name Here
 date: Totally Not the Last Minute
-sansfont: Gill Sans
-slide-numbers: true
----
+...
 
 # An ordinary slide
 
@@ -15,11 +12,11 @@ With some text.
 And some text underneath.
 
 
-\note{
+::: note
 
 Here are my notes.
 
-}
+:::
 
 # Another slide
 
@@ -38,23 +35,23 @@ A note on my list.
 
 This uses beamer's highlighting command to \alert<2>{draw attention here}, but only on the second slide.
 
-\note<1>{
+::: note<1>
 
 Notes can also have overlay specs. First slide version note.
 
-}
+:::
 
-\note<2>{
+::: note<2>
 
 Second.
 
-}
+:::
 
-\note<3>{
+::: note<3>
 
-And third. Use \LaTeX\ macros in notes, like \emph{emphasis}.
+And third. Use markdown in notes: *emphasis*.
 
-}
+:::
 
 # TeX-LOGO
 
@@ -74,8 +71,8 @@ Grid demo LL
 \only<2>{Grid demo LR}
 \end{textblock}
 
-\note<2>{
+::: note<2>
 
-To get overlay effects with materials placed using \texttt{textpos}, you have to specify the overlay within the \texttt{textblock} environment.
+To get overlay effects with materials placed using `textpos`, you have to specify the overlay within the `textblock` environment.
 
-}
+:::
