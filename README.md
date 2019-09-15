@@ -22,7 +22,7 @@ latexmk is used to control xelatex and biber. This has the advantage of automati
 
 You could simply clone or download this repository for each family of talks (e.g. a course of lectures). If you'd rather not proliferate copies of everything here, then you can instead 
 
-1. Place [noslide.lua](noslide.lua) where pandoc looks for filters (by default, `$HOME/.pandoc/filters`)
+1. Place [noslide.lua](noslide.lua) [notes.lua](notes.lua) where pandoc looks for filters (by default, `$HOME/.pandoc/filters`)
 2. Place [elsmd-slides.latex](elsmd-slides.latex) and [beamerarticle.latex](beamerarticle.latex) where pandoc looks for templates (by default, `$HOME/.pandoc/templates`).
 3. Copy over the [Makefile](Makefile) and create a folder `notes` or `scripts` or both to put your markdown in.
 
@@ -49,7 +49,15 @@ Etc.
 :::
 ```
 
-You can also use beamer's `\note` command; inside `\note{...}`, use LaTeX, not markdown. The main reason to choose `\note` would be to specify different notes for incremental lists or pauses using Beamer overlays (`\note<2>{...}`).
+To add notes with a beamer overlay, decorate the Div as follows:
+
+```markdown
+::: note <2>
+This note will only be associated with the *second* stage of a frame.
+:::
+```
+
+You can also use beamer's `\note` command; inside `\note{...}`, use LaTeX, not markdown. 
 
 Handouts use the Beamer class option `handout`, which collapses incremental slides into one to save paper and (possibly) confusion.
 
@@ -85,11 +93,11 @@ I used to use Keynote as a presentation viewer (first converting PDFs using [PDF
 
 The PDFs are generated from two custom [pandoc templates](http://pandoc.org/README.html#templates), which are included here. [elsmd-slides.latex](elsmd-slides.latex) is the template for slides, notes, and handouts. [beamerarticle.latex](beamerarticle.latex) is the template for a lecture script. Both are based on pandoc's default Beamer template, but the latter takes advantage of the beamerarticle LaTeX package (included with Beamer) to convert Beamer slideshow code into an ordinary document with continuous text.
 
-My templates allow a few extra YAML metadata variables to be set in the source markdown.
+My templates allow a few extra YAML metadata variables to be set in the source markdown. For convenience in producing multiple sets of slides (e.g. a course of lectures), you may use the file [slide-meta.yaml](slide-meta.yaml) for metadata that is to be added to every set of slides. Metadata settings in this file are overriden if they are respecified in the file for an individual presentation.
 
 ## Typeface
 
-Set the typeface for the slides:
+Set the typeface for the slides. The default in [slide-meta.yaml](slide-meta.yaml) is:
 
 ```yaml
 sansfont: Gill Sans
@@ -144,4 +152,6 @@ I have set this up to meet my preference for dark slides with light text, which 
 
 ## Note on editing
 
-I use the [vim-pandoc](http://github.com/vim-pandoc/vim-pandoc) and [vim-pandoc-syntax](https://github.com/vim-pandoc/vim-pandoc-syntax) modules for editing markdown in Vim. However, the syntax highlighting has trouble with things like multiline `\note{}`s. A small kludge to the syntax highlighting is supplied here in [vim-pandoc-syntax/after/syntax/pandoc.vim](vim-pandoc-syntax/after/syntax/pandoc.vim), which will work if you adopt the convention of closing `\note{` with a `}` on its own line. The highlighting will then remind you that presentation notes are not markdown but raw TeX. 
+I use the [vim-pandoc](http://github.com/vim-pandoc/vim-pandoc) and [vim-pandoc-syntax](https://github.com/vim-pandoc/vim-pandoc-syntax) modules for editing markdown in Vim. However, the syntax highlighting has trouble with things like multiline `\note{}`s. A small kludge to the syntax highlighting is supplied here in [vim-pandoc-syntax/after/syntax/pandoc.vim](vim-pandoc-syntax/after/syntax/pandoc.vim), which will work if you adopt the convention of closing `\note{` with a `}` on its own line. The highlighting will then remind you that presentation notes are not markdown but raw TeX.
+
+TODO: correct highlighting of native Divs, which vim-pandoc seems to think are definition lists?
