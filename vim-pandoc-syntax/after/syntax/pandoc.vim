@@ -6,3 +6,4 @@
 " on its own line has to close a note. But I follow this convention.
 syn region beamernote matchgroup=Delimiter start="^\\note{" end="^}" contains=@texCmdGroup keepend
 
+syn region nativediv matchgroup=Delimeter start="^:::" end="^:::" contains=ALLBUT,nativediv
