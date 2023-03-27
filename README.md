@@ -61,7 +61,7 @@ This is translated to `\note<2>{This note...}` by pandoc. You can also use beame
 
 Handouts use the Beamer class option `handout`, which collapses incremental slides into one to save paper and (possibly) confusion.
 
-### Lectures from slides
+### Lectures from scripts
 
 For lectures from scripts, create markdown files in the `scripts` directory, on the model of [scripts/script-sample.md](scripts/script-sample.md). Using `make` then generates:
 
