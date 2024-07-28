@@ -32,9 +32,10 @@ The script begins here, after the second slide (with this setup, there is no way
 \end{center}
 
 ::: noslide
-## 0:04
 
-I like to use headings to mark my planned timing. Notice the use of LaTeX rather than markdown for the image in order to specify the width in terms of the `textpos` grid unit. On the slides, the grid is a 9 $\times$ 8 grid with outer margins of 10 and 8 mm. Beamer slides are "physically" 128 mm $\times$ 96 mm. The resulting grid units are `\TPHorizModule` at 12 mm and `\TPVertModule` at 10 mm. In the script, these dimensions are about 1/2 in and 3/8 in, which should usually yield reasonable results.
+0:04
+
+I like to note my planned timing sometimes (and then deviate from it). Notice the use of LaTeX rather than markdown for the image in order to specify the width in terms of the `textpos` grid unit. On the slides, the grid is a 9 $\times$ 8 grid with outer margins of 10 and 8 mm. Beamer slides are "physically" 128 mm $\times$ 96 mm. The resulting grid units are `\TPHorizModule` at 12 mm and `\TPVertModule` at 10 mm. In the script, these dimensions are about 1/2 in and 3/8 in, which should usually yield reasonable results.
 
 :::
 
@@ -50,11 +51,11 @@ I like to use headings to mark my planned timing. Notice the use of LaTeX rather
 
 But the script will only show a single slide, collapsing the increments together. This is not always desirable, and you may want to add a
 
-# note to self: BUILD
+**note to self: BUILD**
 
 to remind you to advance the slideshow as you talk. More complex "builds" are possible using beamer overlays, which go between `<...>`.
 
-# Grid layouts
+**Grid layouts**
 
 For fine layout control for images or other material that can't just be set like ordinary text in slides, use `textpos`:
 
