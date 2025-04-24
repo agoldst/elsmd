@@ -53,6 +53,20 @@ And third. Use markdown in notes: *emphasis*.
 
 :::
 
+--------
+
+![](../media/proj.pdf)
+
+::: l:center
+n@ An image of imaging.
+:::
+
+::: note
+
+Demonstrating a little more custom markup: latex centering with native divs of class `l:center`; `n@` is just for making a paragraph of smaller text (for a note or sim.).
+
+:::
+
 # TeX-LOGO
 
 \begin{textblock}{4}(0,1)
