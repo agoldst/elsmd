@@ -1,0 +1,13 @@
+
+$if(routput)$
+% new environment to be used with R markdown (a knitr hook must also be set)
+\usepackage{fancyvrb}
+$if(routput-options)$
+\DefineVerbatimEnvironment{ROutput}{Verbatim}{%
+    $for(routput-options)$$routput-options$$sep$,$endfor$}
+$else$
+\DefineVerbatimEnvironment{ROutput}{Verbatim}{%
+    formatcom=\color{$if(scuro)$light$else$dark$endif$gray},%
+    fontsize=\footnotesize}
+$endif$
+$endif$
