@@ -1,46 +1,114 @@
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$babel-lang$,$endif$$if(handout)$handout,$endif$$if(beamer)$ignorenonframetext,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+$passoptions.latex()$
+\documentclass[
+$if(fontsize)$
+  $fontsize$,
+$endif$
+  ignorenonframetext,
+$if(handout)$
+  handout,
+$endif$
+$if(aspectratio)$
+  aspectratio=$aspectratio$,
+$endif$
+$if(babel-lang)$
+  $babel-lang$,
+$endif$
+$for(classoption)$
+  $classoption$$sep$,
+$endfor$
+]{$documentclass$}
+$if(geometry)$
+\geometry{$for(geometry)$$geometry$$sep$,$endfor$}
+$endif$
+\newif\ifbibliography
 
-$if(fontfamily)$
-\usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
+$if(background-image)$
+\usebackgroundtemplate{%
+  \includegraphics[width=\paperwidth]{$background-image$}%
+}
+% In beamer background-image does not work well when other images are used, so this is the workaround
+\pgfdeclareimage[width=\paperwidth,height=\paperheight]{background}{$background-image$}
+\usebackgroundtemplate{\pgfuseimage{background}}
+$endif$
+\usepackage{pgfpages}
+% unlike default.beamer, no figure caption numbering
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
+$--
+$-- section numbering
+$--
+$if(numbersections)$
 $else$
-\usepackage{lmodern}
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
 $endif$
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
-  \usepackage[utf8]{inputenc}
-$if(euro)$
-  \usepackage{eurosym}
-$endif$
-\else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
+$for(beameroption)$
+\setbeameroption{$beameroption$}
+$endfor$
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+$if(section-titles)$
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
   \else
-    \usepackage{fontspec}
+    \frame{\sectionpage}
   \fi
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
-$if(euro)$
-  \newcommand{\euro}{€}
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
 $endif$
-$if(mainfont)$
-    \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
+$fonts.latex()$
+$font-settings.latex()$
+$common.latex()$
+$for(header-includes)$
+$header-includes$
+$endfor$
+$after-header-includes.latex()$
+$hypersetup.latex()$
+
+$if(title)$
+\title$if(shorttitle)$[$shorttitle$]$endif${\texorpdfstring{$title$}{$title-meta$}$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
-$if(sansfont)$
-    \setsansfont[$for(sansfontoptions)$$sansfontoptions$$sep$,$endfor$]{$sansfont$}
+$if(subtitle)$
+\subtitle$if(shortsubtitle)$[$shortsubtitle$]$endif${\texorpdfstring{$subtitle$}{$subtitle-meta$}}
 $endif$
-$if(monofont)$
-    \setmonofont[Mapping=tex-ansi$if(monofontoptions)$,$for(monofontoptions)$$monofontoptions$$sep$,$endfor$$endif$]{$monofont$}
+\author$if(shortauthor)$[$shortauthor$]$endif${\texorpdfstring{$for(author)$$author$$sep$ \and $endfor$}{$author-meta$}}
+\date$if(shortdate)$[$shortdate$]$endif${$date$}
+$if(institute)$
+\institute$if(shortinstitute)$[$shortinstitute$]$endif${$for(institute)$$institute$$sep$ \and $endfor$}
 $endif$
-$if(mathfont)$
-    \setmathfont(Digits,Latin,Greek)[$for(mathfontoptions)$$mathfontoptions$$sep$,$endfor$]{$mathfont$}
+$if(titlegraphic)$
+\titlegraphic{
+$for(titlegraphic)$
+  \includegraphics$if(titlegraphicoptions)$[$for(titlegraphicoptions)$$titlegraphicoptions$$sep$, $endfor$]$endif${$titlegraphic$}$sep$\enspace
+$endfor$}
 $endif$
-$if(CJKmainfont)$
-    \usepackage{xeCJK}
-    \setCJKmainfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
+$if(logo)$
+\logo{\includegraphics{$logo$}}
 $endif$
-\fi
+
 
 $if(scuro)$
 % light-on-dark slides: white text on 90% black background
@@ -55,10 +123,6 @@ $if(scuro)$
 \setbeamercolor*{palette quaternary}{use=structure,fg=structure.fg!95!black,bg=black!80}
 
 \setbeamercolor*{framesubtitle}{fg=white}
-% N.B. we also skip pandoc's default adjustment to figure captions:
-% \setbeamertemplate{caption}[numbered]
-% \setbeamertemplate{caption label separator}{: }
-\setbeamercolor{caption name}{fg=normal text.fg}
 
 % color URLs with highlight color
 \hypersetup{colorlinks=true, urlcolor=structure}
@@ -67,22 +131,6 @@ $endif$
 % use system fonts. The sans font will be used
 \usefonttheme{professionalfonts}
 \setbeamerfont{quote}{shape=\upshape}
-
-% eliminate silly beamer navigation line at bottom of slides
-% or optionally replace with 3 / 25 little number
-$if(slide-numbers)$
-$if(beamer-notes)$
-% for the speaker-notes version of the slide, we need a kludge to get the right number to appear
-\setbeamertemplate{navigation symbols}{%
-    \setcounter{slidenum}{\insertpagenumber / 2 + 1}
-    \setcounter{slidetotal}{\insertdocumentendpage / 2}
-    \theslidenum\ / \theslidetotal}
-$else$
-\setbeamertemplate{navigation symbols}{\insertpagenumber\ / \insertdocumentendpage}
-$endif$
-$else$
-\setbeamertemplate{navigation symbols}{}
-$endif$
 
 % ensure text jusfication
 \usepackage{ragged2e}
@@ -94,53 +142,10 @@ $endif$
 
 \urlstyle{$if(urlstyle)$$urlstyle$$else$same$endif$}
 
-% use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
-$if(lang)$
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[shorthands=off,$for(babel-otherlangs)$$babel-otherlangs$,$endfor$main=$babel-lang$]{babel}
-$if(babel-newcommands)$
-  $babel-newcommands$
-$endif$
-\else
-  \usepackage{polyglossia}
-  \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
-$for(polyglossia-otherlangs)$
-  \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
-$endfor$
-\fi
-$endif$
-\newif\ifbibliography
-$if(natbib)$
-\usepackage{natbib}
-\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
-$endif$
-$if(biblatex)$
-$if(biblatex-chicago)$
-\usepackage[$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex-chicago}
-$else$
-\usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
-$if(biblatexoptions)$\ExecuteBibliographyOptions{$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$}$endif$
-$endif$
-$if(bibliography)$
-\bibliography{$bibliography$}
-$endif$
 \setbeamertemplate{bibliography item}{}
 \setbeamertemplate{frametitle continuation}[from second]
-$endif$
-$if(listings)$
-\usepackage{listings}
-$endif$
-$if(lhs)$
-\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
-$endif$
+
 $if(highlighting-macros)$
-$highlighting-macros$
 % tweak code highlighting environment used by pandoc
 $if(highlighting-options)$
 \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
@@ -150,110 +155,17 @@ $else$
 \RecustomVerbatimEnvironment{Highlighting}{Verbatim}{%
     commandchars=\\\{\},fontsize=\small}
 $endif$
+$routput.latex()$
 $endif$
 
-$if(routput)$
-% new environment to be used with R markdown (a knitr hook must also be set)
-\usepackage{fancyvrb}
-$if(routput-options)$
-\DefineVerbatimEnvironment{ROutput}{Verbatim}{%
-    $for(routput-options)$$routput-options$$sep$,$endfor$}
-$else$
-\DefineVerbatimEnvironment{ROutput}{Verbatim}{%
-    formatcom=\color{$if(scuro)$light$else$dark$endif$gray},%
-    fontsize=\footnotesize}
-$endif$
-$endif$
 
-$if(verbatim-in-note)$
-\usepackage{fancyvrb}
-\VerbatimFootnotes % allows verbatim text in footnotes
-$endif$
-
-\usepackage{longtable,booktabs}
-\usepackage{caption}
-% These lines are needed to make table captions work with longtable:
-\makeatletter
-\def\fnum@table{\tablename~\thetable}
-\makeatother
-
-\usepackage{graphicx}
-\makeatletter
-% pandoc 3.2.1 always wraps images in a custom \pandocbounded macro
-\newsavebox\pandoc@box
-\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
-  \sbox\pandoc@box{#1}%
-  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
-  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
-  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
-  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
-  \else\usebox{\pandoc@box}%
-  \fi%
-}
-\makeatother
 \usepackage[multidot]{grffile}
+
 \setlength{\parskip}{\baselineskip}
 
-$if(section-titles)$
-\AtBeginPart{
-  \let\insertpartnumber\relax
-  \let\partname\relax
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \let\insertsectionnumber\relax
-    \let\sectionname\relax
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \let\insertsubsectionnumber\relax
-  \let\subsectionname\relax
-  \frame{\subsectionpage}
-}
-$endif$
-
-$if(links-as-notes)$
-% Make links footnotes instead of hotlinks:
-\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
-$endif$
-$if(strikeout)$
-\usepackage[normalem]{ulem}
-% avoid problems with \sout in headers with hyperref:
-\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
-$endif$
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-$if(numbersections)$
-\setcounter{secnumdepth}{5}
-$else$
-\setcounter{secnumdepth}{0}
-$endif$
-$if(dir)$
-\ifxetex
-  % load bidi as late as possible as it modifies e.g. graphicx
-  $if(latex-dir-rtl)$
-  \usepackage[RTLdocument]{bidi}
-  $else$
-  \usepackage{bidi}
-  $endif$
-\fi
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \TeXXeTstate=1
-  \newcommand{\RL}[1]{\beginR #1\endR}
-  \newcommand{\LR}[1]{\beginL #1\endL}
-  \newenvironment{RTL}{\beginR}{\endR}
-  \newenvironment{LTR}{\beginL}{\endL}
-\fi
-$endif$
 
-\usepackage{calc}
 $if(beamer-notes)$
-\newcounter{slidenum}
-\newcounter{slidetotal}
 \setbeameroption{show notes}
 % include slide number on beamer note page BUT we have to deal with the fact that all the page counters are thrown off by the addition of notes pages
 \setbeamertemplate{note page}{%
@@ -273,11 +185,28 @@ $if(beamer-notes)$
 \makeatother
 $endif$
 
-$if(beamer-handout)$
+% eliminate silly beamer navigation line at bottom of slides
+% or optionally replace with 3 / 25 little number
 $if(slide-numbers)$
+\newcounter{slidenum}
+\newcounter{slidetotal}
+$if(beamer-notes)$
+    % for the speaker-notes version of the slide, we need a kludge to get the right number to appear
+    \setbeamertemplate{navigation symbols}{%
+        \setcounter{slidenum}{\insertpagenumber / 2 + 1}
+        \setcounter{slidetotal}{\insertdocumentendpage / 2}
+        \theslidenum\ / \theslidetotal}
+$else$
+    \setbeamertemplate{navigation symbols}%
+        {\insertpagenumber\ / \insertdocumentendpage}
+$endif$
+$else$
+    \setbeamertemplate{navigation symbols}{}
+$endif$
+
+$if(beamer-handout)$
 % blank out slide number on handout no matter what
 \setbeamertemplate{navigation symbols}{}
-$endif$
 \usepackage{pgfpages}
 \pgfpagesdeclarelayout{2 on 1 with blanks landscape}{
     \edef\pgfpageoptionheight{\the\paperheight}
@@ -331,49 +260,81 @@ $endif$
 border shrink=0.125in]
 $endif$
 
-
 \usepackage[overlay,absolute]{textpos}
 \TPGrid[10 mm,8 mm]{9}{8} % 9x8 grid with units of 12 mm and 10 mm
-
-$for(header-includes)$
-$header-includes$
-$endfor$
-
-$if(title)$
-\title{$title$}
-$endif$
-$if(subtitle)$
-\subtitle{$subtitle$}
-$endif$
-$if(author)$
-\author{$for(author)$$author$$sep$ \and $endfor$}
-$endif$
-$if(institute)$
-\institute{$for(institute)$$institute$$sep$ \and $endfor$}
-$endif$
-\date{$date$}
-
 
 \begin{document}
 $if(title)$
 \frame{\titlepage}
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
 $endif$
 
 $for(include-before)$
 $include-before$
 
 $endfor$
-
+$if(toc)$
+$if(toc-title)$
+\renewcommand*\contentsname{$toc-title$}
+$endif$
+\begin{frame}[allowframebreaks]
+$if(toc-title)$
+  \frametitle{$toc-title$}
+$endif$
+  \setcounter{tocdepth}{$toc-depth$}
+  \tableofcontents
+\end{frame}
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+}
+$endif$
+$if(lof)$
+\listoffigures
+$endif$
+$if(lot)$
+\listoftables
+$endif$
+$if(linestretch)$
+\setstretch{$linestretch$}
+$endif$
 $body$
 
+$if(natbib)$
+$if(bibliography)$
+$if(biblio-title)$
+$if(has-chapters)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+$if(nocite-ids)$
+  \nocite{$for(nocite-ids)$$it$$sep$, $endfor$}
+$endif$
+  \bibliographytrue
+  \bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+\end{frame}
+
+$endif$
+$endif$
+$if(biblatex)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+$if(nocite-ids)$
+  \nocite{$for(nocite-ids)$$it$$sep$, $endfor$}
+$endif$
+  \bibliographytrue
+  \printbibliography[heading=none]
+\end{frame}
+
+$endif$
 $for(include-after)$
 $include-after$
 
 $endfor$
-
-$if(biblio-title)$
-\begin{frame}[t,allowframebreaks]{$biblio-title$}
-    \printbibliography[heading=none]
-\end{frame}
-$endif$
 \end{document}
+
