@@ -66,8 +66,6 @@ For fine layout control for images or other material that can't just be set like
 
 (Incidentally, if the script has bad page breaks, a `\newpage` works as it should.)
 
-\newpage
-
 :::
 
 # Image positioning

@@ -30,7 +30,7 @@ SLIDE_YAML := slide-meta.yaml
 SCURO := true
 
 # Extra options to pandoc. Note that certain options set here are overridden.
-PANDOC_OPTIONS := 
+PANDOC_OPTIONS := --biblatex
 
 ## ---- special external files ----
 
@@ -45,7 +45,7 @@ NOTES_LUA := notes.lua
 
 # these work if the two templates are local or in ~/.pandoc/templates
 SLIDES_TMPL := elsmd-slides.latex
-SCRIPT_TMPL := beamerarticle.latex
+SCRIPT_TMPL := elsmd-slides.latex # sic!
 
 # used for `make install`
 
@@ -111,6 +111,7 @@ $(scripts_tex): lectures/%.tex: $(SLIDE_YAML) $(SCRIPTS)/%.md
 	mkdir -p lectures
 	$(PANDOC) -t beamer --template $(SCRIPT_TMPL) \
 	    $(NOSLIDE_FILTER) \
+	    -V beamerarticle=true \
 	    -M hide_noslide=false \
 	    -V fontsize=12pt \
 	    -V scuro="" \

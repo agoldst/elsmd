@@ -3,7 +3,10 @@ $passoptions.latex()$
 $if(fontsize)$
   $fontsize$,
 $endif$
+$if(beamerarticle)$
+$else$
   ignorenonframetext,
+$endif$
 $if(handout)$
   handout,
 $endif$
@@ -16,7 +19,16 @@ $endif$
 $for(classoption)$
   $classoption$$sep$,
 $endfor$
-]{$documentclass$}
+]{$if(beamerarticle)$article$else$$documentclass$$endif$}
+$if(beamerarticle)$
+\usepackage{beamerarticle} % needs to be loaded first
+\usepackage[compact]{titlesec}
+$if(beamer-file)$
+\setjobnamebeamerversion{$beamer-file$}
+$endif$
+$endif$ $-- if(beamerarticle)
+
+
 $if(geometry)$
 \geometry{$for(geometry)$$geometry$$sep$,$endfor$}
 $endif$
@@ -30,10 +42,13 @@ $if(background-image)$
 \pgfdeclareimage[width=\paperwidth,height=\paperheight]{background}{$background-image$}
 \usebackgroundtemplate{\pgfuseimage{background}}
 $endif$
+$if(beamerarticle)$
+$else$
 \usepackage{pgfpages}
 % unlike default.beamer, no figure caption numbering
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbols$if(navigation)$$navigation$$else$empty$endif$
+$endif$
 $--
 $-- section numbering
 $--
@@ -165,7 +180,6 @@ $endif$
 
 \usepackage[multidot]{grffile}
 
-\setlength{\parskip}{\baselineskip}
 
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 
@@ -206,6 +220,31 @@ $else$
 $endif$
 $else$
     \setbeamertemplate{navigation symbols}{}
+$endif$
+
+$if(beamerarticle)$
+% in a lecture script, draw a rule for new slides
+\setbeamertemplate{frame begin}{\par\noindent\rule{\textwidth}{0.25pt}\par}
+
+% and prevent figures on slides from floating away in the script
+\usepackage{float}
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+
+\usepackage{titling}
+\setlength{\droptitle}{-60 pt}
+\renewcommand{\maketitlehooka}{\begin{flushleft}}
+\pretitle{}
+\posttitle{\\}
+\preauthor{}
+\postauthor{\\}
+\predate{}
+\postdate{}
+\renewcommand{\maketitlehookd}{\end{flushleft}}
+
+$else$
+% and in regular slides (but not beamerarticle), skip a line between paras!
+\setlength{\parskip}{\baselineskip}
 $endif$
 
 % an environment for multi-paragraph quotations with correct indentation
@@ -276,18 +315,27 @@ $if(beamer-handout)$
 border shrink=0.125in]
 $endif$
 
+$if(beamerarticle)$
+\usepackage{textpos} % relative, not absolute
+\TPGrid[2 in,3.5 in]{9}{8} % 9x8 grid with units of 2 and 3.5 in
+$else$
 \usepackage[overlay,absolute]{textpos}
 \TPGrid[10 mm,8 mm]{9}{8} % 9x8 grid with units of 12 mm and 10 mm
+$endif$
 
 \begin{document}
 $if(title)$
+$if(beamerarticle)$
+\maketitle
+$else$
 \frame{\titlepage}
 $if(abstract)$
 \begin{abstract}
 $abstract$
 \end{abstract}
 $endif$
-$endif$
+$endif$ $-- if(beamerarticle)
+$endif$ $-- if(title)
 
 $for(include-before)$
 $include-before$
