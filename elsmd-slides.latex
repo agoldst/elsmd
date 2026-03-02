@@ -82,6 +82,8 @@ $endif$
 $fonts.latex()$
 $font-settings.latex()$
 $common.latex()$
+$-- support for biblatex-chicago
+$biblatex-chicago.latex()$
 $for(header-includes)$
 $header-includes$
 $endfor$
@@ -143,6 +145,8 @@ $endif$
 \urlstyle{$if(urlstyle)$$urlstyle$$else$same$endif$}
 
 \setbeamertemplate{bibliography item}{}
+\setbeamercolor*{bibliography entry author}{fg=white}
+
 \setbeamertemplate{frametitle continuation}[from second]
 
 $if(highlighting-macros)$
@@ -203,6 +207,18 @@ $endif$
 $else$
     \setbeamertemplate{navigation symbols}{}
 $endif$
+
+% an environment for multi-paragraph quotations with correct indentation
+\newenvironment{lquote}{\list{}{\listparindent 1em%
+    \itemindent 0pt
+    \leftmargin 0pt
+    \parsep 0pt plus 1pt}\item\relax}%
+{\endlist}
+\newenvironment{lquoteii}{\list{}{\listparindent 1em%
+    \itemindent 0pt
+    \leftmargin 2em
+    \parsep 0pt plus 1pt}\item\relax}%
+{\endlist}
 
 $if(beamer-handout)$
 % blank out slide number on handout no matter what

@@ -1,0 +1,14 @@
+
+$-- set biblatex: false to use biblatex-chicago, but pass --biblatex at command line
+$if(biblatex-chicago)$
+\usepackage[$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex-chicago}
+$else$
+\usepackage$if(biblio-style)$[style=$biblio-style$]$endif${biblatex}
+$if(biblatexoptions)$\ExecuteBibliographyOptions{$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$}$endif$
+$endif$
+% autocite shouldn't be footcite on slides 
+\DeclareAutoCiteCommand{footnote}{\cite}{\cites}
+\let\textcite=\autocite
+$if(bibliography)$
+\bibliography{$bibliography$}
+$endif$
