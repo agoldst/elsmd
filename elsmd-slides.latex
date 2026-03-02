@@ -143,6 +143,7 @@ $if(scuro)$
 
 % color URLs with highlight color
 \hypersetup{colorlinks=true, urlcolor=structure}
+
 $endif$
 
 % use system fonts. The sans font will be used
@@ -159,8 +160,9 @@ $endif$
 
 \urlstyle{$if(urlstyle)$$urlstyle$$else$same$endif$}
 
+% no cutesy beamer formatting on citations
 \setbeamertemplate{bibliography item}{}
-\setbeamercolor*{bibliography entry author}{fg=white}
+\setbeamercolor*{bibliography entry author}{fg=fg}
 
 \setbeamertemplate{frametitle continuation}[from second]
 
