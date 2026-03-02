@@ -43,9 +43,8 @@ NOSLIDE_LUA := noslide.lua
 # filter used to process speaker notes with beamer overlays
 NOTES_LUA := notes.lua
 
-# these work if the two templates are local or in ~/.pandoc/templates
+# this will work if this template file is local or in ~/.pandoc/templates
 SLIDES_TMPL := elsmd-slides.latex
-SCRIPT_TMPL := elsmd-slides.latex # sic!
 
 # used for `make install`
 
@@ -60,7 +59,7 @@ temp_dir := tmp
 
 # copy templates and filter script to pandoc's default locations for these
 install:
-	cp -f $(SLIDES_TMPL) $(SCRIPT_TMPL) $(TMPL_DIR)
+	cp -f $(SLIDES_TMPL) $(TMPL_DIR)
 	cp -f $(NOSLIDE_LUA) $(NOTES_LUA) $(FILTER_DIR)
 
 ## ---- commands ----
@@ -109,7 +108,7 @@ $(notes_tex): lectures/%.tex: $(SLIDE_YAML) $(NOTES)/%.md
 
 $(scripts_tex): lectures/%.tex: $(SLIDE_YAML) $(SCRIPTS)/%.md
 	mkdir -p lectures
-	$(PANDOC) -t beamer --template $(SCRIPT_TMPL) \
+	$(PANDOC) -t beamer --template $(SLIDES_TMPL) \
 	    $(NOSLIDE_FILTER) \
 	    -V beamerarticle=true \
 	    -M hide_noslide=false \
