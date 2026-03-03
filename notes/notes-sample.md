@@ -1,6 +1,10 @@
 ---
 title: A Sample Set of Slides
 date: Totally Not the Last Minute
+biblatex: false
+biblatex-chicago: true
+biblatexoptions: [notes, noibid]
+bibliography: ../sources.bib
 ...
 
 # An ordinary slide
@@ -55,10 +59,12 @@ And third. Use markdown in notes: *emphasis*.
 
 --------
 
-![](../media/proj.pdf)
 
 ::: l:center
-n@ An image of imaging.
+
+![](../media/proj.pdf){ width=90% }
+
+n@ An image of imaging, [@diablo:projector].
 :::
 
 ::: note
@@ -66,6 +72,10 @@ n@ An image of imaging.
 Demonstrating a little more custom markup: latex centering with native divs of class `l:center`; `n@` is just for making a paragraph of smaller text (for a note or sim.).
 
 :::
+
+# Bibliography generation: still annoying
+
+- You won't find anything about slides in [@bringhurst:elements].
 
 # TeX-LOGO
 
@@ -90,3 +100,4 @@ Grid demo LL
 To get overlay effects with materials placed using `textpos`, you have to specify the overlay within the `textblock` environment.
 
 :::
+
