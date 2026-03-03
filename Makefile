@@ -23,9 +23,11 @@ NOTES := notes
 SCRIPTS := scripts
 
 # output directories
+# use "slide-handouts" if generating those because I often have
+# an independent `handout` folder for other stuff
 SLIDES := slides
 LECTURES := lectures
-HANDOUTS := slide_handouts # because I often have an independent `handout` folder
+HANDOUTS := slide-handouts
 
 # set to empty if you don't want to generate the handouts
 # MAKE_HANDOUTS :=
