@@ -48,6 +48,7 @@ SLIDES_TMPL := elsmd-slides.latex
 
 # used for `make install`
 
+PARTIAL_TMPLS := biblatex-chicago.latex routput.latex
 TMPL_DIR := $(HOME)/.pandoc/templates
 FILTER_DIR := $(HOME)/.pandoc/filters
 
@@ -59,7 +60,7 @@ temp_dir := tmp
 
 # copy templates and filter script to pandoc's default locations for these
 install:
-	cp -f $(SLIDES_TMPL) $(TMPL_DIR)
+	cp -f $(SLIDES_TMPL) $(PARTIAL_TMPLS) $(TMPL_DIR)
 	cp -f $(NOSLIDE_LUA) $(NOTES_LUA) $(FILTER_DIR)
 
 ## ---- commands ----
