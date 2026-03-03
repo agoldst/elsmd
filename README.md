@@ -147,6 +147,6 @@ I have set this up to meet my preference for dark slides with light text, which 
 
 ## Quotations
 
-I include a snippet defining an `lquote` environment for quotations which may run to more than one paragraph. Unlike the bad beamer/LaTeX defaults, this environment uses the full width of the textblock, does not indent the first paragraph, and _does_ indent subsequent paragraphs. To use without breaking your markdown flow, take advantage of an extra markdown feature implemented by [notes.lua](notes.lua): a native Div with a class of the form `l:env` is turned into a LaTeX `\begin{env}`. So: `::: l:quote ... :::`.
+I include a snippet defining an `lquote` environment for quotations which may run to more than one paragraph. Unlike the bad beamer/LaTeX defaults, this environment uses the full width of the textblock, does not indent the first paragraph, and _does_ indent subsequent paragraphs. To use without breaking your markdown flow, take advantage of an extra markdown feature implemented by [notes.lua](notes.lua): a native Div with a class of the form `l:env` is turned into a LaTeX `\begin{env}`. So: `::: l:lquote ... :::`.
 
 Last significant update: March 2026
