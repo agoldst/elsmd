@@ -28,12 +28,13 @@ LECTURES := lectures
 HANDOUTS := slide_handouts # because I often have an independent `handout` folder
 
 # set to empty if you don't want to generate the handouts
+# MAKE_HANDOUTS :=
 MAKE_HANDOUTS := true
 
 # default metadata added to all inputs; can be overridden, or leave empty to remove
+# (multiple YAML files possible too)
 SLIDE_YAML := slide-meta.yaml
 
-# 
 # Set to anything non-empty to always use the "scuro" dark-on-light scheme
 # on slides. Comment this out to turn this off (you can still turn it on
 # in individual files with "scuro: true" in the YAML metadata)
@@ -62,7 +63,7 @@ PARTIAL_TMPLS := biblatex-chicago.latex routput.latex
 TMPL_DIR := $(HOME)/.pandoc/templates
 FILTER_DIR := $(HOME)/.pandoc/filters
 
-# temp file subdirectory (created in lectures, slides, handouts)
+# temp file subdirectory (created in lectures, slides, slide_handouts)
 # change this if you're using */tmp for something else
 temp_dir := tmp
 
@@ -73,9 +74,7 @@ install:
 	cp -f $(SLIDES_TMPL) $(PARTIAL_TMPLS) $(TMPL_DIR)
 	cp -f $(NOSLIDE_LUA) $(NOTES_LUA) $(FILTER_DIR)
 
-## ---- commands ----
-
-# Change these only to really change the behavior of the whole setup
+## ---- pandoc and latexmk config ----
 
 # pandoc 2 changes the latex-option name to pdf-engine, so:
 pandoc2 := `pandoc -v | head -1 | grep '^pandoc 2'`
@@ -97,15 +96,18 @@ lectures_notes_tex := $(patsubst $(NOTES)/%.md,$(LECTURES)/%.tex,$(notes_md))
 lectures_notes_pdf := $(patsubst %.tex,%.pdf,$(lectures_notes_tex)) 
 lectures_scripts_tex := $(patsubst $(SCRIPTS)/%.md,$(LECTURES)/%.tex,$(scripts_md))
 lectures_scripts_pdf := $(patsubst %.tex,%.pdf,$(lectures_scripts_tex)) 
+
 slides_notes_tex := $(patsubst $(NOTES)/%.md,$(SLIDES)/%.tex,$(notes_md))
+slides_notes_pdf := $(patsubst %.tex,%.pdf,$(slides_notes_tex)) 
 slides_scripts_tex := $(patsubst $(SCRIPTS)/%.md,$(SLIDES)/%.tex,$(scripts_md))
-slides_pdf := $(patsubst %.tex,%.pdf,$(slides_notes_tex) $(slides_scripts_tex))
+slides_scripts_pdf := $(patsubst %.tex,%.pdf,$(slides_scripts_tex)) 
+
 handouts_notes_tex := $(patsubst $(NOTES)/%.md,$(HANDOUTS)/%.tex,$(notes_md))
 handouts_notes_pdf := $(patsubst %.tex,%.pdf,$(handouts_notes_tex))
 handouts_scripts_tex := $(patsubst $(SCRIPTS)/%.md,$(HANDOUTS)/%.tex,$(scripts_md))
 handouts_scripts_pdf := $(patsubst %.tex,%.pdf,$(handouts_scripts_tex))
 
-# intermediate TeX files: generate with pandoc
+## ---- intermediate TeX file generation ----
 
 $(lectures_notes_tex): $(LECTURES)/%.tex: $(SLIDE_YAML) $(NOTES)/%.md
 	mkdir -p $(LECTURES)
@@ -158,12 +160,12 @@ $(handouts_scripts_tex): $(HANDOUTS)/%.tex: $(SLIDE_YAML) $(SCRIPTS)/%.md
 	    -V section-titles="" \
 	    -o $@ $^
 
-# pdf typesetting
+## ---- PDF typesetting ----
 
 # pdfs1up is all pdfs except for lectures_notes_pdf,
 # which needs separate treatment for 2x2up printing
-pdfs1up := $(lectures_scripts_pdf) $(slides_pdf) $(handouts_notes_pdf) \
-    $(handouts_scripts_pdf)
+pdfs1up := $(lectures_scripts_pdf) $(slides_notes_pdf) $(slides_scripts_pdf) \
+	   $(handouts_notes_pdf) $(handouts_scripts_pdf)
 
 pdfs := $(pdfs1up) $(lectures_notes_pdf)
 
